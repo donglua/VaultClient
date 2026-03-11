@@ -56,7 +56,7 @@ class WebDAVService {
 
   /// Uploads a list of bytes directly into a file at [remotePath].
   Future<void> upload(String remotePath, List<int> bytes) async {
-    await client.write(Uint8List.fromList(bytes), remotePath);
+    await client.write(remotePath, Uint8List.fromList(bytes));
   }
 
   /// Downloads a remote file to the local device storage.
