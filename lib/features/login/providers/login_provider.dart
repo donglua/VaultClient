@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../../core/services/sync_engine.dart';
 
 final webdavLoginProvider = NotifierProvider<WebDAVLoginNotifier, WebDAVLoginState>(() {
@@ -21,6 +22,8 @@ class WebDAVLoginState {
 }
 
 class WebDAVLoginNotifier extends Notifier<WebDAVLoginState> {
+  final _secureStorage = const FlutterSecureStorage();
+
   @override
   WebDAVLoginState build() {
     return WebDAVLoginState();
@@ -34,10 +37,16 @@ class WebDAVLoginNotifier extends Notifier<WebDAVLoginState> {
 
       final pingSuccess = await webdavService.ping();
       if (pingSuccess) {
+        // Securely store credentials using flutter_secure_storage
+        await _secureStorage.write(key: 'webdav_url', value: url);
+        await _secureStorage.write(key: 'webdav_username', value: username);
+        await _secureStorage.write(key: 'webdav_password', value: password);
+
+        // Also clean up any insecurely stored credentials if they exist
         final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('webdav_url', url);
-        await prefs.setString('webdav_username', username);
-        await prefs.setString('webdav_password', password);
+        await prefs.remove('webdav_url');
+        await prefs.remove('webdav_username');
+        await prefs.remove('webdav_password');
 
         state = state.copyWith(isLoading: false);
         return true;
@@ -52,10 +61,33 @@ class WebDAVLoginNotifier extends Notifier<WebDAVLoginState> {
   }
 
   Future<bool> checkExistingLogin() async {
-    final prefs = await SharedPreferences.getInstance();
-    final url = prefs.getString('webdav_url');
-    final username = prefs.getString('webdav_username');
-    final password = prefs.getString('webdav_password');
+    String? url = await _secureStorage.read(key: 'webdav_url');
+    String? username = await _secureStorage.read(key: 'webdav_username');
+    String? password = await _secureStorage.read(key: 'webdav_password');
+
+    // If not in secure storage, check SharedPreferences for migration
+    if (url == null || username == null || password == null) {
+      final prefs = await SharedPreferences.getInstance();
+      final oldUrl = prefs.getString('webdav_url');
+      final oldUsername = prefs.getString('webdav_username');
+      final oldPassword = prefs.getString('webdav_password');
+
+      if (oldUrl != null && oldUsername != null && oldPassword != null) {
+        // Migrate to secure storage
+        await _secureStorage.write(key: 'webdav_url', value: oldUrl);
+        await _secureStorage.write(key: 'webdav_username', value: oldUsername);
+        await _secureStorage.write(key: 'webdav_password', value: oldPassword);
+
+        // Remove from insecure storage
+        await prefs.remove('webdav_url');
+        await prefs.remove('webdav_username');
+        await prefs.remove('webdav_password');
+
+        url = oldUrl;
+        username = oldUsername;
+        password = oldPassword;
+      }
+    }
 
     if (url != null && username != null && password != null) {
       final webdavService = ref.read(webdavServiceProvider);
