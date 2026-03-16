@@ -7,9 +7,6 @@ import '../providers/file_tree_provider.dart';
 import '../../editor/screens/editor_screen.dart';
 import '../../../core/services/sync_engine.dart';
 
-/// The main layout screen for the Obsidian sync client.
-/// Uses a responsive design: a split pane on large screens (desktop/tablet)
-/// and a single pane that pushes the editor on smaller screens (mobile).
 class MainScreen extends ConsumerStatefulWidget {
   const MainScreen({super.key});
 
@@ -20,6 +17,7 @@ class MainScreen extends ConsumerStatefulWidget {
 class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObserver {
   bool _isSyncing = false;
   Timer? _syncTimer;
+  bool _isDrawerOpen = true;
 
   @override
   void initState() {
@@ -37,35 +35,26 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    // Resume syncing only when the app is active in the foreground.
     if (state == AppLifecycleState.resumed) {
       _startSyncTimer();
     } else if (state == AppLifecycleState.paused || state == AppLifecycleState.detached) {
-      // Stop the timer when the app is placed in the background or killed.
       _stopSyncTimer();
     }
   }
 
-  /// Starts the periodic sync timer if it is not already running.
   void _startSyncTimer() {
     if (_syncTimer == null || !_syncTimer!.isActive) {
       _syncTimer = Timer.periodic(Duration(minutes: 5), (_) {
-        // Trigger a silent sync every 5 minutes
         _manualSync(silent: true);
       });
     }
   }
 
-  /// Stops the active sync timer.
   void _stopSyncTimer() {
     _syncTimer?.cancel();
     _syncTimer = null;
   }
 
-  /// Triggers a manual synchronization via the [SyncEngine].
-  ///
-  /// [silent] determines whether UI feedback (Snackbars) will be shown.
-  /// Used internally for periodic background syncing to prevent spamming the user.
   Future<void> _manualSync({bool silent = false}) async {
     if (_isSyncing) return;
     setState(() {
@@ -74,15 +63,22 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
 
     try {
       final syncEngine = ref.read(syncEngineProvider);
-      // In a real app, you might want to sync to a specific remote folder instead of root.
       await syncEngine.syncVault('/');
       ref.read(fileTreeNotifierProvider.notifier).refresh();
       if (!silent && mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Sync complete!')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: const Text('Sync complete!'),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ));
       }
     } catch (e) {
       if (!silent && mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Sync failed: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Sync failed: $e'),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ));
       }
     } finally {
       if (mounted) {
@@ -95,36 +91,110 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
 
   @override
   Widget build(BuildContext context) {
-    // Determine layout based on width
     final isDesktop = MediaQuery.of(context).size.width >= 800;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Obsidian Vault'),
-        actions: [
-          _isSyncing
-            ? Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Center(child: SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))),
-              )
-            : IconButton(
-                icon: Icon(Icons.sync),
-                onPressed: _manualSync,
-              ),
-        ],
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              colorScheme.primaryContainer.withOpacity(0.3),
+              colorScheme.surface,
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: isDesktop ? _buildDesktopLayout() : _buildMobileLayout(),
+        ),
       ),
-      body: isDesktop ? _buildDesktopLayout() : _buildMobileLayout(),
     );
   }
 
   Widget _buildDesktopLayout() {
     return Row(
       children: [
-        SizedBox(
-          width: 250,
-          child: _FileTreeWidget(),
+        // Side Navigation Rail
+        NavigationRail(
+          extended: _isDrawerOpen,
+          minWidth: 72,
+          minExtendedWidth: 240,
+          leading: Column(
+            children: [
+              const SizedBox(height: 16),
+              IconButton(
+                icon: const Icon(Icons.menu),
+                onPressed: () => setState(() => _isDrawerOpen = !_isDrawerOpen),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.folder_open, color: Theme.of(context).colorScheme.primary),
+                  if (_isDrawerOpen) ...[
+                    const SizedBox(width: 12),
+                    Text(
+                      'Vault',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+              const SizedBox(height: 24),
+            ],
+          ),
+          trailing: Column(
+            children: [
+              const Spacer(),
+              IconButton(
+                icon: _isSyncing 
+                  ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                  : const Icon(Icons.sync),
+                onPressed: _isSyncing ? null : _manualSync,
+                tooltip: 'Sync',
+              ),
+              const SizedBox(height: 8),
+              IconButton(
+                icon: const Icon(Icons.settings),
+                onPressed: () {},
+                tooltip: 'Settings',
+              ),
+              const SizedBox(height: 16),
+            ],
+          ),
+          selectedIndex: 0,
+          onDestinationSelected: (index) {},
+          destinations: const [
+            NavigationRailDestination(
+              icon: Icon(Icons.folder),
+              label: Text('Files'),
+            ),
+            NavigationRailDestination(
+              icon: Icon(Icons.history),
+              label: Text('Recent'),
+            ),
+          ],
         ),
-        VerticalDivider(width: 1, thickness: 1),
+        // File Tree Panel
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          width: _isDrawerOpen ? 280 : 0,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surfaceContainerLowest,
+            border: Border(
+              right: BorderSide(
+                color: Theme.of(context).colorScheme.outlineVariant,
+                width: 1,
+              ),
+            ),
+          ),
+          child: _isDrawerOpen ? _FileTreeWidget() : null,
+        ),
+        // Editor Area
         Expanded(
           child: _EditorArea(),
         ),
@@ -133,7 +203,25 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
   }
 
   Widget _buildMobileLayout() {
-    return _FileTreeWidget();
+    return Column(
+      children: [
+        AppBar(
+          title: const Text('Obsidian Vault'),
+          actions: [
+            _isSyncing
+              ? const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)),
+                )
+              : IconButton(
+                  icon: const Icon(Icons.sync),
+                  onPressed: _manualSync,
+                ),
+          ],
+        ),
+        Expanded(child: _FileTreeWidget()),
+      ],
+    );
   }
 }
 
@@ -141,12 +229,28 @@ class _FileTreeWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final files = ref.watch(fileTreeNotifierProvider);
+    final colorScheme = Theme.of(context).colorScheme;
 
     if (files.isEmpty) {
-      return Center(child: Text('Empty Vault'));
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.folder_open, size: 64, color: colorScheme.onSurfaceVariant),
+            const SizedBox(height: 16),
+            Text(
+              'Empty Vault',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
+      );
     }
 
     return ListView.builder(
+      padding: const EdgeInsets.symmetric(vertical: 8),
       itemCount: files.length,
       itemBuilder: (context, index) {
         final entity = files[index];
@@ -154,14 +258,24 @@ class _FileTreeWidget extends ConsumerWidget {
         final isDir = entity is Directory;
 
         return ListTile(
-          leading: Icon(isDir ? Icons.folder : Icons.description),
-          title: Text(name),
+          leading: Icon(
+            isDir ? Icons.folder_rounded : Icons.description_rounded,
+            color: isDir ? colorScheme.primary : colorScheme.secondary,
+          ),
+          title: Text(
+            name,
+            style: TextStyle(
+              fontWeight: isDir ? FontWeight.w600 : FontWeight.normal,
+            ),
+          ),
+          trailing: isDir ? Icon(Icons.chevron_right, color: colorScheme.onSurfaceVariant) : null,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
           onTap: () {
             if (!isDir && name.endsWith('.md')) {
               ref.read(selectedFileProvider.notifier).selectFile(entity as File);
-
               if (MediaQuery.of(context).size.width < 800) {
-                // Mobile: push new screen
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => EditorScreen(file: entity)),
@@ -179,9 +293,31 @@ class _EditorArea extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedFile = ref.watch(selectedFileProvider);
+    final colorScheme = Theme.of(context).colorScheme;
 
     if (selectedFile == null) {
-      return Center(child: Text('Select a file to edit/preview'));
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.edit_document, size: 64, color: colorScheme.onSurfaceVariant),
+            const SizedBox(height: 16),
+            Text(
+              'Select a file to edit',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Choose a markdown file from the sidebar',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
+      );
     }
 
     return EditorScreen(file: selectedFile, isDesktop: true);
