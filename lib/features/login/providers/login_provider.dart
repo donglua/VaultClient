@@ -48,6 +48,15 @@ class WebDAVLoginNotifier extends Notifier<WebDAVLoginState> {
         await prefs.remove('webdav_username');
         await prefs.remove('webdav_password');
 
+        // Trigger initial sync to pull remote files
+        try {
+          final syncEngine = ref.read(syncEngineProvider);
+          await syncEngine.syncVault('');
+        } catch (syncError) {
+          print('[LoginProvider] Initial sync failed: $syncError');
+          // Continue anyway, user can manually sync later
+        }
+
         state = state.copyWith(isLoading: false);
         return true;
       } else {
@@ -58,6 +67,22 @@ class WebDAVLoginNotifier extends Notifier<WebDAVLoginState> {
       state = state.copyWith(isLoading: false, error: e.toString());
       return false;
     }
+  }
+
+  /// 退出登录，清除所有凭证
+  Future<void> logout() async {
+    await _secureStorage.delete(key: 'webdav_url');
+    await _secureStorage.delete(key: 'webdav_username');
+    await _secureStorage.delete(key: 'webdav_password');
+    
+    // Also clean up SharedPreferences if exists
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('webdav_url');
+    await prefs.remove('webdav_username');
+    await prefs.remove('webdav_password');
+    
+    // Reset state
+    state = WebDAVLoginState();
   }
 
   Future<bool> checkExistingLogin() async {

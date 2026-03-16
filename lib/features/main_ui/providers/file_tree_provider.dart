@@ -20,13 +20,22 @@ class SelectedFileNotifier extends Notifier<File?> {
 class FileTreeNotifier extends Notifier<List<FileSystemEntity>> {
   @override
   List<FileSystemEntity> build() {
-    refresh();
+    // 初始构建时不立即刷新，避免在 build 中触发异步操作
     return [];
   }
 
+  /// 刷新文件树
+  /// 
+  /// 调用此方法会在同步完成后更新文件树显示
   Future<void> refresh() async {
-    final local = ref.read(localStorageServiceProvider);
-    state = await local.listFiles('');
+    try {
+      final local = ref.read(localStorageServiceProvider);
+      final files = await local.listFiles('');
+      state = files;
+    } catch (e) {
+      print('[FileTreeNotifier] Failed to refresh: $e');
+      state = [];
+    }
   }
 }
 

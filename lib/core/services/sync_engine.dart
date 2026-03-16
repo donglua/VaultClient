@@ -39,9 +39,14 @@ class SyncEngine {
   ///
   /// [remoteBasePath] The base path on the WebDAV server to sync with.
   Future<void> syncVault(String remoteBasePath) async {
-    final vaultDir = await _local.getVaultDirectory();
-    await _pullRemote(remoteBasePath, '', vaultDir.path);
-    await _pushLocal(vaultDir.path, '', remoteBasePath);
+    try {
+      final vaultDir = await _local.getVaultDirectory();
+      await _pullRemote(remoteBasePath, '', vaultDir.path);
+      await _pushLocal(vaultDir.path, '', remoteBasePath);
+    } catch (e) {
+      // Re-throw with more context
+      throw Exception('同步失败：${e.toString()}');
+    }
   }
 
   /// Helper method to recursively pull files from the remote WebDAV server to local storage.
@@ -51,7 +56,19 @@ class SyncEngine {
   /// [localVaultPath] The absolute path to the local vault on the device.
   Future<void> _pullRemote(String remoteBasePath, String relativePath, String localVaultPath) async {
     try {
-      final remoteFiles = await _webdav.readDir(p.join(remoteBasePath, relativePath));
+      // Build remote path correctly
+      // When remoteBasePath is empty, use '/' for root
+      // Otherwise append relativePath to remoteBasePath
+      String remotePath;
+      if (relativePath.isEmpty) {
+        remotePath = remoteBasePath.isEmpty ? '/' : remoteBasePath;
+      } else {
+        // Ensure proper path joining without double slashes
+        final base = remoteBasePath.isEmpty ? '' : (remoteBasePath.endsWith('/') ? remoteBasePath.substring(0, remoteBasePath.length - 1) : remoteBasePath);
+        remotePath = '$base/$relativePath';
+      }
+      
+      final remoteFiles = await _webdav.readDir(remotePath);
       for (var file in remoteFiles) {
         if (file.name == null || file.name!.isEmpty) continue;
 
