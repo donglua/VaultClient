@@ -181,6 +181,7 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
           minWidth: 72,
           minExtendedWidth: 240,
           leading: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               const SizedBox(height: 16),
               IconButton(
@@ -210,6 +211,7 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
             builder: (context) {
               final colorScheme = Theme.of(context).colorScheme;
               return Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   const Spacer(),
                   IconButton(
@@ -274,29 +276,31 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
   }
 
   Widget _buildMobileLayout() {
-    return Column(
-      children: [
-        AppBar(
-          title: const Text('Obsidian Vault'),
-          actions: [
-            _isSyncing
-              ? const Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)),
-                )
-              : IconButton(
-                  icon: const Icon(Icons.sync),
-                  onPressed: _manualSync,
-                ),
-            IconButton(
-              icon: const Icon(Icons.logout_rounded),
-              onPressed: _showLogoutDialog,
-              tooltip: 'Logout',
-            ),
-          ],
-        ),
-        Expanded(child: _FileTreeWidget()),
-      ],
+    return SizedBox.expand(
+      child: Column(
+        children: [
+          AppBar(
+            title: const Text('Obsidian Vault'),
+            actions: [
+              _isSyncing
+                ? const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)),
+                  )
+                : IconButton(
+                    icon: const Icon(Icons.sync),
+                    onPressed: _manualSync,
+                  ),
+              IconButton(
+                icon: const Icon(Icons.logout_rounded),
+                onPressed: _showLogoutDialog,
+                tooltip: 'Logout',
+              ),
+            ],
+          ),
+          Expanded(child: _FileTreeWidget()),
+        ],
+      ),
     );
   }
 
