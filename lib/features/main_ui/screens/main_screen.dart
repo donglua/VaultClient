@@ -2,10 +2,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:obsidian/l10n/app_localizations.dart';
 import 'package:path/path.dart' as p;
 import '../providers/file_tree_provider.dart';
 import '../../editor/screens/editor_screen.dart';
 import '../../../core/services/sync_engine.dart';
+import '../../../core/utils/error_util.dart';
 import '../../login/providers/login_provider.dart';
 import '../../login/screens/login_screen.dart';
 
@@ -79,7 +81,7 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
             children: [
               const Icon(Icons.check_circle, color: Colors.white),
               const SizedBox(width: 12),
-              const Text('同步成功！'),
+              Text(AppLocalizations.of(context)!.syncSuccess),
             ],
           ),
           backgroundColor: Colors.green,
@@ -90,7 +92,7 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
     } catch (e) {
       if (!silent && mounted) {
         final colorScheme = Theme.of(context).colorScheme;
-        final errorMsg = _getFriendlyErrorMessage(e.toString());
+        final errorMsg = ErrorUtil.getFriendlyErrorMessage(context, e.toString());
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,7 +102,7 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
                 children: [
                   const Icon(Icons.error, color: Colors.white),
                   const SizedBox(width: 12),
-                  const Text('同步失败', style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text(AppLocalizations.of(context)!.syncFailed, style: const TextStyle(fontWeight: FontWeight.bold)),
                 ],
               ),
               const SizedBox(height: 8),
@@ -112,7 +114,7 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           duration: const Duration(seconds: 5),
           action: SnackBarAction(
-            label: '重试',
+            label: AppLocalizations.of(context)!.retry,
             textColor: Colors.white,
             onPressed: () => _manualSync(silent: true),
           ),
@@ -124,27 +126,6 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
           _isSyncing = false;
         });
       }
-    }
-  }
-
-  /// 友好的错误消息转换
-  String _getFriendlyErrorMessage(String error) {
-    if (error.contains('Account') && error.contains('expired')) {
-      return '账号已过期，请续费后重试';
-    } else if (error.contains('Authentication') || error.contains('401')) {
-      return '认证失败，请检查账号密码';
-    } else if (error.contains('403')) {
-      return '无权限访问，请检查账号权限';
-    } else if (error.contains('404')) {
-      return '远程目录不存在';
-    } else if (error.contains('timeout') || error.contains('Timeout')) {
-      return '网络超时，请检查网络连接';
-    } else if (error.contains('Connection') || error.contains('connection')) {
-      return '无法连接服务器，请检查网络';
-    } else {
-      // 截取错误消息前 100 字符
-      final msg = error.length > 100 ? '${error.substring(0, 100)}...' : error;
-      return msg;
     }
   }
 
@@ -241,14 +222,14 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
           ),
           selectedIndex: 0,
           onDestinationSelected: (index) {},
-          destinations: const [
+          destinations: [
             NavigationRailDestination(
               icon: Icon(Icons.folder),
-              label: Text('Files'),
+              label: Text(AppLocalizations.of(context)!.files),
             ),
             NavigationRailDestination(
               icon: Icon(Icons.history),
-              label: Text('Recent'),
+              label: Text(AppLocalizations.of(context)!.recent),
             ),
           ],
         ),
@@ -280,7 +261,7 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
       child: Column(
         children: [
           AppBar(
-            title: const Text('Obsidian Vault'),
+            title: Text(AppLocalizations.of(context)!.obsidianVault),
             actions: [
               _isSyncing
                 ? const Padding(
@@ -310,14 +291,15 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
       context: context,
       builder: (BuildContext context) {
         final colorScheme = Theme.of(context).colorScheme;
+        final l10n = AppLocalizations.of(context)!;
         return AlertDialog(
           icon: Icon(Icons.logout_rounded, color: colorScheme.error, size: 48),
-          title: const Text('退出登录'),
-          content: const Text('确定要退出当前账号吗？\n\n退出后需要重新输入 WebDAV 凭证。'),
+          title: Text(l10n.logoutTitle),
+          content: Text(l10n.logoutConfirm),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('取消'),
+              child: Text(l10n.cancel),
             ),
             FilledButton(
               onPressed: () {
@@ -327,7 +309,7 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
               style: FilledButton.styleFrom(
                 backgroundColor: colorScheme.error,
               ),
-              child: const Text('退出'),
+              child: Text(l10n.logout),
             ),
           ],
         );

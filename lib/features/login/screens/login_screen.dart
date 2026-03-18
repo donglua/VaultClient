@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:obsidian/l10n/app_localizations.dart';
 import '../providers/login_provider.dart';
 import '../../main_ui/screens/main_screen.dart';
 
@@ -46,9 +47,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     if (success && mounted) {
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => MainScreen()));
     } else if (mounted) {
+      final error = ref.read(webdavLoginProvider).error;
+      String errorMessage = AppLocalizations.of(context)!.loginFailed;
+      if (error != null) {
+        if (error == 'serverErrorCheckConfig') {
+          errorMessage = AppLocalizations.of(context)!.serverErrorCheckConfig;
+        } else {
+          errorMessage = error;
+        }
+      }
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(ref.read(webdavLoginProvider).error ?? 'Login failed'),
+          content: Text(errorMessage),
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
@@ -60,6 +71,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget build(BuildContext context) {
     final state = ref.watch(webdavLoginProvider);
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       body: Container(
@@ -95,7 +107,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                         const SizedBox(height: 24),
                         Text(
-                          'Obsidian Sync',
+                          l10n.appTitle,
                           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: colorScheme.onSurface,
@@ -104,7 +116,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Sync your notes with WebDAV',
+                          l10n.loginSubtitle,
                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: colorScheme.onSurfaceVariant,
                           ),
@@ -115,29 +127,29 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         // Form Fields
                         TextField(
                           controller: _urlController,
-                          decoration: const InputDecoration(
-                            labelText: 'WebDAV URL',
+                          decoration: InputDecoration(
+                            labelText: l10n.webDavUrl,
                             hintText: 'https://example.com/webdav/',
-                            prefixIcon: Icon(Icons.link),
+                            prefixIcon: const Icon(Icons.link),
                           ),
                         ),
                         const SizedBox(height: 16),
                         TextField(
                           controller: _usernameController,
-                          decoration: const InputDecoration(
-                            labelText: 'Username',
-                            hintText: 'Your username',
-                            prefixIcon: Icon(Icons.person),
+                          decoration: InputDecoration(
+                            labelText: l10n.username,
+                            hintText: 'user',
+                            prefixIcon: const Icon(Icons.person),
                           ),
                         ),
                         const SizedBox(height: 16),
                         TextField(
                           controller: _passwordController,
                           obscureText: true,
-                          decoration: const InputDecoration(
-                            labelText: 'Password',
-                            hintText: 'Your password',
-                            prefixIcon: Icon(Icons.lock),
+                          decoration: InputDecoration(
+                            labelText: l10n.password,
+                            hintText: '***',
+                            prefixIcon: const Icon(Icons.lock),
                           ),
                         ),
                         const SizedBox(height: 32),
@@ -148,7 +160,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             : FilledButton.icon(
                                 onPressed: _login,
                                 icon: const Icon(Icons.login_rounded),
-                                label: const Text('Login & Sync'),
+                                label: Text(l10n.loginAndSync),
                                 style: FilledButton.styleFrom(
                                   padding: const EdgeInsets.symmetric(vertical: 16),
                                   shape: RoundedRectangleBorder(
@@ -161,7 +173,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         
                         // Footer text
                         Text(
-                          'Your data is stored securely via WebDAV',
+                          l10n.footerText,
                           style: Theme.of(context).textTheme.labelSmall?.copyWith(
                             color: colorScheme.onSurfaceVariant,
                           ),

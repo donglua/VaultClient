@@ -45,7 +45,7 @@ class SyncEngine {
       await _pushLocal(vaultDir.path, '', remoteBasePath);
     } catch (e) {
       // Re-throw with more context
-      throw Exception('同步失败：${e.toString()}');
+      throw Exception(e.toString());
     }
   }
 

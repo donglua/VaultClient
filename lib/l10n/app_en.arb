@@ -1,0 +1,44 @@
+{
+  "@@locale": "en",
+  "appTitle": "VaultClient",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "loginFailed": "Login failed",
+  "connectVault": "Connect to your Vault",
+  "loginSubtitle": "Enter your WebDAV details to sync your markdown notes.",
+  "webDavUrl": "WebDAV URL (e.g., https://example.com/webdav/)",
+  "username": "Username",
+  "password": "Password",
+  "loginAndSync": "Login & Sync",
+  "footerText": "Your data is stored securely via WebDAV",
+  "serverErrorCheckConfig": "Cannot connect to the server, please check configuration and credentials.",
+  
+  "accountExpired": "Account has expired, please renew and try again",
+  "authFailed": "Authentication failed, please check username and password",
+  "noPermission": "No permission to access, please check account permissions",
+  "fileNotFound": "Remote file or directory does not exist",
+  "networkTimeout": "Network request timed out, please check network connection",
+  "cannotConnect": "Cannot connect to server, please check network and server address",
+  "networkError": "Network request error, possibly CORS restriction or network unreachable",
+  
+  "syncSuccess": "Sync successful!",
+  "syncFailed": "Sync failed",
+  "retry": "Retry",
+  "logoutTitle": "Logout",
+  "logoutConfirm": "Are you sure you want to log out of the current account?\n\nYou will need to re-enter WebDAV credentials after logging out.",
+  "cancel": "Cancel",
+  "logout": "Logout",
+  
+  "files": "Files",
+  "recent": "Recent",
+  "obsidianVault": "Obsidian Vault",
+  "writeMarkdownHere": "Write your markdown here...",
+  
+  "savedLocally": "Saved locally",
+  "imageInserted": "Image inserted",
+  "insertImage": "Insert Image",
+  "preview": "Preview",
+  "edit": "Edit",
+  "save": "Save"
+}

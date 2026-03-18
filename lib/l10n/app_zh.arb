@@ -1,0 +1,41 @@
+{
+  "@@locale": "zh",
+  "appTitle": "VaultClient",
+  "loginFailed": "登录失败",
+  "connectVault": "连接到你的 Vault",
+  "loginSubtitle": "输入 WebDAV 详情以同步 Markdown 笔记",
+  "webDavUrl": "WebDAV 链接 (例如：https://example.com/webdav/)",
+  "username": "用户名",
+  "password": "密码",
+  "loginAndSync": "登录并同步",
+  "footerText": "你的数据通过 WebDAV 安全存储",
+  "serverErrorCheckConfig": "无法连接到服务器，请检查配置和凭证。",
+  
+  "accountExpired": "账号已过期，请续费后重试",
+  "authFailed": "认证失败，请检查账号和密码是否正确",
+  "noPermission": "无权限访问，请检查账号权限",
+  "fileNotFound": "远程文件或目录不存在",
+  "networkTimeout": "网络请求超时，请检查网络连接",
+  "cannotConnect": "无法连接到服务器，请检查网络和服务器地址",
+  "networkError": "网络请求错误，可能是跨域(CORS)限制或网络不通",
+  
+  "syncSuccess": "同步成功！",
+  "syncFailed": "同步失败",
+  "retry": "重试",
+  "logoutTitle": "退出登录",
+  "logoutConfirm": "确定要退出当前账号吗？\n\n退出后需要重新输入 WebDAV 凭证。",
+  "cancel": "取消",
+  "logout": "退出",
+  
+  "files": "文件",
+  "recent": "最近",
+  "obsidianVault": "Obsidian 笔记库",
+  "writeMarkdownHere": "在这里输入 markdown 内容...",
+  
+  "savedLocally": "已保存到本地",
+  "imageInserted": "已插入图片",
+  "insertImage": "插入图片",
+  "preview": "预览",
+  "edit": "编辑",
+  "save": "保存"
+}

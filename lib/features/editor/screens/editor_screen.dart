@@ -5,6 +5,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as p;
+import 'package:obsidian/l10n/app_localizations.dart';
 import '../utils/markdown_utils.dart';
 
 /// Screen responsible for rendering a Markdown editor with a toggleable
@@ -41,6 +42,7 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: widget.isDesktop ? null : AppBar(title: Text(widget.file.path.split('/').last)),
       body: Column(
@@ -54,7 +56,7 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
                   IconButton(
                     icon: Icon(Icons.image),
                     onPressed: _insertImage,
-                    tooltip: 'Insert Image',
+                    tooltip: l10n.insertImage,
                   ),
                 IconButton(
                   icon: Icon(_isEditing ? Icons.visibility : Icons.edit),
@@ -63,17 +65,17 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
                       _isEditing = !_isEditing;
                     });
                   },
-                  tooltip: _isEditing ? 'Preview' : 'Edit',
+                  tooltip: _isEditing ? l10n.preview : l10n.edit,
                 ),
                 IconButton(
                   icon: Icon(Icons.save),
                   onPressed: () async {
                     await widget.file.writeAsString(_controller.text);
                     if (mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Saved locally')));
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.savedLocally)));
                     }
                   },
-                  tooltip: 'Save',
+                  tooltip: l10n.save,
                 )
               ],
             ),
@@ -93,7 +95,7 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
         controller: _controller,
         maxLines: null,
         expands: true,
-        decoration: InputDecoration.collapsed(hintText: "Write your markdown here..."),
+        decoration: InputDecoration.collapsed(hintText: AppLocalizations.of(context)!.writeMarkdownHere),
       ),
     );
   }
@@ -145,7 +147,7 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
       }
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Image inserted')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.imageInserted)));
       }
     }
   }

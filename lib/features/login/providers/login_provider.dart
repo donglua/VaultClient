@@ -60,7 +60,7 @@ class WebDAVLoginNotifier extends Notifier<WebDAVLoginState> {
         state = state.copyWith(isLoading: false);
         return true;
       } else {
-        state = state.copyWith(isLoading: false, error: 'Failed to connect. Please check credentials.');
+        state = state.copyWith(isLoading: false, error: 'serverErrorCheckConfig');
         return false;
       }
     } catch (e) {
