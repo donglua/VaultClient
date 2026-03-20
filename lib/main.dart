@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:obsidian/l10n/app_localizations.dart';
-import 'features/login/screens/login_screen.dart';
+import 'features/login/presentation/screens/login_screen.dart';
 
 void main() {
   runApp(ProviderScope(child: MyApp()));
