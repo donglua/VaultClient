@@ -50,15 +50,27 @@ class SyncEngine {
   /// 4. 再将本地缺少或更新的文件推送到远程服务器。
   ///
   /// [remoteBasePath] 要同步的 WebDAV 服务器根路径。
-  Future<void> syncVault(String remoteBasePath) async {
+  Future<SyncResult> syncVault(String remoteBasePath) async {
+    final stopwatch = Stopwatch()..start();
+    final stats = _SyncStats();
+
     final basePath = _normalizeRemoteBasePath(remoteBasePath);
     final vaultDir = await _local.getVaultDirectory();
     final indexMap = await _index.loadEntryMap();
 
-    await _pullRemote(basePath, '', vaultDir.path, indexMap);
+    await _pullRemote(basePath, '', vaultDir.path, indexMap, stats);
     await _index.bulkReplace(indexMap.values);
 
-    await _pushLocal(vaultDir.path, '', basePath);
+    await _pushLocal(vaultDir.path, '', basePath, stats);
+
+    stopwatch.stop();
+    return SyncResult(
+      scannedCount: stats.scannedCount,
+      downloadedCount: stats.downloadedCount,
+      skippedCount: stats.skippedCount,
+      failedCount: stats.failedCount,
+      elapsed: stopwatch.elapsed,
+    );
   }
 
   /// 递归地将远程 WebDAV 服务器文件拉取到本地存储。
@@ -71,6 +83,7 @@ class SyncEngine {
     String relativePath,
     String localVaultPath,
     Map<String, SyncEntry> indexMap,
+    _SyncStats stats,
   ) async {
     final remotePath = _resolveRemotePath(remoteBasePath, relativePath);
 
@@ -84,6 +97,8 @@ class SyncEngine {
         if (file.name == _indexFileName) {
           continue;
         }
+
+        stats.scannedCount++;
 
         final localItemRelPath = relativePath.isEmpty
             ? file.name!
@@ -115,6 +130,7 @@ class SyncEngine {
             localItemRelPath,
             localVaultPath,
             indexMap,
+            stats,
           );
           continue;
         }
@@ -138,6 +154,9 @@ class SyncEngine {
           } else {
             await _webdav.downloadFile(remoteItemPath, localItemFullPath);
           }
+          stats.downloadedCount++;
+        } else {
+          stats.skippedCount++;
         }
 
         final localStat = await localFile.exists()
@@ -154,6 +173,7 @@ class SyncEngine {
         );
       }
     } catch (e) {
+      stats.failedCount++;
       debugPrint('Pull remote failed for $relativePath: $e');
     }
   }
@@ -167,6 +187,7 @@ class SyncEngine {
     String localVaultPath,
     String relativePath,
     String remoteBasePath,
+    _SyncStats stats,
   ) async {
     final localDir = Directory(
       p.joinAll([localVaultPath, ...p.posix.split(relativePath)]),
@@ -198,7 +219,12 @@ class SyncEngine {
         final childRelativePath = relativePath.isEmpty
             ? name
             : p.posix.join(relativePath, name);
-        await _pushLocal(localVaultPath, childRelativePath, remoteBasePath);
+        await _pushLocal(
+          localVaultPath,
+          childRelativePath,
+          remoteBasePath,
+          stats,
+        );
       } else if (entity is File) {
         try {
           final remoteStat = await _webdav
@@ -227,8 +253,13 @@ class SyncEngine {
             await _webdav.uploadFile(remoteItemPath, entity.path);
           }
         } catch (_) {
+          stats.failedCount++;
           // 读取远程出错时，假设不存在并上传
-          await _webdav.uploadFile(remoteItemPath, entity.path);
+          try {
+            await _webdav.uploadFile(remoteItemPath, entity.path);
+          } catch (_) {
+            stats.failedCount++;
+          }
         }
       }
     }
@@ -323,4 +354,27 @@ class _PullDecision {
     required this.shouldDownload,
     required this.isConflictDownload,
   });
+}
+
+class SyncResult {
+  final int scannedCount;
+  final int downloadedCount;
+  final int skippedCount;
+  final int failedCount;
+  final Duration elapsed;
+
+  const SyncResult({
+    required this.scannedCount,
+    required this.downloadedCount,
+    required this.skippedCount,
+    required this.failedCount,
+    required this.elapsed,
+  });
+}
+
+class _SyncStats {
+  int scannedCount = 0;
+  int downloadedCount = 0;
+  int skippedCount = 0;
+  int failedCount = 0;
 }

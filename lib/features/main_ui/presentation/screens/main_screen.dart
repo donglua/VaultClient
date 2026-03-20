@@ -76,16 +76,27 @@ class _MainScreenState extends ConsumerState<MainScreen>
 
     try {
       final syncEngine = ref.read(syncEngineProvider);
-      await syncEngine.syncVault('/');
+      final result = await syncEngine.syncVault('/');
       ref.read(fileTreeNotifierProvider.notifier).refresh();
       if (!silent && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Row(
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.check_circle, color: Colors.white),
-                const SizedBox(width: 12),
-                Text(AppLocalizations.of(context)!.syncSuccess),
+                Row(
+                  children: [
+                    const Icon(Icons.check_circle, color: Colors.white),
+                    const SizedBox(width: 12),
+                    Text(AppLocalizations.of(context)!.syncSuccess),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Scanned: ${result.scannedCount}  Downloaded: ${result.downloadedCount}  Skipped: ${result.skippedCount}  Failed: ${result.failedCount}  Time: ${result.elapsed.inMilliseconds}ms',
+                  style: const TextStyle(fontSize: 13),
+                ),
               ],
             ),
             backgroundColor: Colors.green,
