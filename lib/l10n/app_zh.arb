@@ -37,5 +37,12 @@
   "insertImage": "插入图片",
   "preview": "预览",
   "edit": "编辑",
-  "save": "保存"
+  "save": "保存",
+
+  "vaultLabel": "文件库",
+  "syncTooltip": "同步",
+  "settingsTooltip": "设置",
+  "emptyVault": "文件库为空",
+  "selectFileToEdit": "选择文件以编辑",
+  "selectMarkdownHint": "从侧边栏选择一个 Markdown 文件"
 }

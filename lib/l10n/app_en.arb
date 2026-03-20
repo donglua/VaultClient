@@ -40,5 +40,12 @@
   "insertImage": "Insert Image",
   "preview": "Preview",
   "edit": "Edit",
-  "save": "Save"
+  "save": "Save",
+
+  "vaultLabel": "Vault",
+  "syncTooltip": "Sync",
+  "settingsTooltip": "Settings",
+  "emptyVault": "Empty Vault",
+  "selectFileToEdit": "Select a file to edit",
+  "selectMarkdownHint": "Choose a markdown file from the sidebar"
 }

@@ -118,4 +118,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get save => 'Save';
+
+  @override
+  String get vaultLabel => 'Vault';
+
+  @override
+  String get syncTooltip => 'Sync';
+
+  @override
+  String get settingsTooltip => 'Settings';
+
+  @override
+  String get emptyVault => 'Empty Vault';
+
+  @override
+  String get selectFileToEdit => 'Select a file to edit';
+
+  @override
+  String get selectMarkdownHint => 'Choose a markdown file from the sidebar';
 }

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -53,7 +54,7 @@ class WebDAVLoginNotifier extends Notifier<WebDAVLoginState> {
           final syncEngine = ref.read(syncEngineProvider);
           await syncEngine.syncVault('');
         } catch (syncError) {
-          print('[LoginProvider] Initial sync failed: $syncError');
+          debugPrint('[LoginProvider] Initial sync failed: $syncError');
           // 同步失败不影响登录，用户可以稍后手动同步
         }
 

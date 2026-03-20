@@ -301,6 +301,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save'**
   String get save;
+
+  /// No description provided for @vaultLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Vault'**
+  String get vaultLabel;
+
+  /// No description provided for @syncTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync'**
+  String get syncTooltip;
+
+  /// No description provided for @settingsTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settingsTooltip;
+
+  /// No description provided for @emptyVault.
+  ///
+  /// In en, this message translates to:
+  /// **'Empty Vault'**
+  String get emptyVault;
+
+  /// No description provided for @selectFileToEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a file to edit'**
+  String get selectFileToEdit;
+
+  /// No description provided for @selectMarkdownHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a markdown file from the sidebar'**
+  String get selectMarkdownHint;
 }
 
 class _AppLocalizationsDelegate

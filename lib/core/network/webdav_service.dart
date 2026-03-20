@@ -37,12 +37,15 @@ class WebDAVService {
   }
 
   /// 在远程服务器的 [path] 路径创建目录。
-  /// 如果目录已存在则忽略错误。
+  /// 如果目录已存在（HTTP 405）则忽略，其他错误继续抛出。
   Future<void> mkCol(String path) async {
     try {
       await client.mkdir(path);
     } catch (e) {
-      // 目录已存在则忽略
+      // HTTP 405 Method Not Allowed 表示目录已存在，可安全忽略
+      if (!e.toString().contains('405')) {
+        rethrow;
+      }
     }
   }
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:obsidian/l10n/app_localizations.dart';
 import '../providers/login_provider.dart';
-import '../../main_ui/presentation/screens/main_screen.dart';
+import '../../../main_ui/presentation/screens/main_screen.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});

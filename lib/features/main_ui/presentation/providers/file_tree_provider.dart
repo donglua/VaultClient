@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/sync/sync_engine.dart';
 
@@ -33,7 +34,7 @@ class FileTreeNotifier extends Notifier<List<FileSystemEntity>> {
       final files = await local.listFiles('');
       state = files;
     } catch (e) {
-      print('[FileTreeNotifier] Failed to refresh: $e');
+      debugPrint('[FileTreeNotifier] Failed to refresh: $e');
       state = [];
     }
   }

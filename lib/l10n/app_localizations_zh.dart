@@ -109,4 +109,22 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get save => '保存';
+
+  @override
+  String get vaultLabel => '文件库';
+
+  @override
+  String get syncTooltip => '同步';
+
+  @override
+  String get settingsTooltip => '设置';
+
+  @override
+  String get emptyVault => '文件库为空';
+
+  @override
+  String get selectFileToEdit => '选择文件以编辑';
+
+  @override
+  String get selectMarkdownHint => '从侧边栏选择一个 Markdown 文件';
 }

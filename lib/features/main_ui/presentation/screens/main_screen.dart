@@ -7,7 +7,7 @@ import 'package:path/path.dart' as p;
 import '../providers/file_tree_provider.dart';
 import '../../../editor/presentation/screens/editor_screen.dart';
 import '../../../../core/sync/sync_engine.dart';
-import '../../../../core/error/error_util.dart';
+import '../../../../core/utils/error_util.dart';
 import '../../../login/presentation/providers/login_provider.dart';
 import '../../../login/presentation/screens/login_screen.dart';
 
@@ -177,7 +177,7 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
                   if (_isDrawerOpen) ...[
                     const SizedBox(width: 12),
                     Text(
-                      'Vault',
+                      AppLocalizations.of(context)!.vaultLabel,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -200,19 +200,19 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
                       ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
                       : const Icon(Icons.sync),
                     onPressed: _isSyncing ? null : _manualSync,
-                    tooltip: 'Sync',
+                    tooltip: AppLocalizations.of(context)!.syncTooltip,
                   ),
                   const SizedBox(height: 8),
                   IconButton(
                     icon: const Icon(Icons.settings),
                     onPressed: () {},
-                    tooltip: 'Settings',
+                    tooltip: AppLocalizations.of(context)!.settingsTooltip,
                   ),
                   const SizedBox(height: 16),
                   IconButton(
                     icon: const Icon(Icons.logout_rounded),
                     onPressed: _showLogoutDialog,
-                    tooltip: 'Logout',
+                    tooltip: AppLocalizations.of(context)!.logoutTitle,
                     color: colorScheme.error,
                   ),
                   const SizedBox(height: 16),
@@ -275,7 +275,7 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
               IconButton(
                 icon: const Icon(Icons.logout_rounded),
                 onPressed: _showLogoutDialog,
-                tooltip: 'Logout',
+                tooltip: AppLocalizations.of(context)!.logoutTitle,
               ),
             ],
           ),
@@ -353,7 +353,7 @@ class _FileTreeWidgetState extends ConsumerState<_FileTreeWidget> {
             Icon(Icons.folder_open, size: 64, color: colorScheme.onSurfaceVariant),
             const SizedBox(height: 16),
             Text(
-              'Empty Vault',
+              AppLocalizations.of(context)!.emptyVault,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 color: colorScheme.onSurfaceVariant,
               ),
@@ -402,7 +402,7 @@ class _FileTreeWidgetState extends ConsumerState<_FileTreeWidget> {
                 },
               ),
               // 如果展开，显示子文件和子文件夹
-              if (isExpanded) ..._buildSubFiles(entity as Directory, colorScheme),
+              if (isExpanded) ..._buildSubFiles(entity, colorScheme),
             ],
           );
         } else {
@@ -485,7 +485,7 @@ class _FileTreeWidgetState extends ConsumerState<_FileTreeWidget> {
           );
           // 递归显示子内容
           if (isExpanded) {
-            subWidgets.addAll(_buildSubFiles(entity as Directory, colorScheme));
+            subWidgets.addAll(_buildSubFiles(entity, colorScheme));
           }
         } else if (name.endsWith('.md')) {
           // 只显示 .md 文件
@@ -517,7 +517,7 @@ class _FileTreeWidgetState extends ConsumerState<_FileTreeWidget> {
         }
       }
     } catch (e) {
-      print('Error reading subfiles of ${dir.path}: $e');
+      debugPrint('Error reading subfiles of ${dir.path}: $e');
     }
     return subWidgets;
   }
@@ -537,14 +537,14 @@ class _EditorArea extends ConsumerWidget {
             Icon(Icons.edit_document, size: 64, color: colorScheme.onSurfaceVariant),
             const SizedBox(height: 16),
             Text(
-              'Select a file to edit',
+              AppLocalizations.of(context)!.selectFileToEdit,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 color: colorScheme.onSurfaceVariant,
               ),
             ),
             const SizedBox(height: 8),
             Text(
-              'Choose a markdown file from the sidebar',
+              AppLocalizations.of(context)!.selectMarkdownHint,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: colorScheme.onSurfaceVariant,
               ),

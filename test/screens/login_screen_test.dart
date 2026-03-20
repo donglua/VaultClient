@@ -4,7 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../lib/features/login/screens/login_screen.dart';
+import '../../lib/features/login/presentation/screens/login_screen.dart';
 
 void main() {
   group('LoginScreen', () {

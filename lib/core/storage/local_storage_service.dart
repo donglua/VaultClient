@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 /// 本地文件存储服务，封装对应用文档目录下 vault 文件夹的读写操作。
@@ -14,7 +15,7 @@ class LocalStorageService {
 
   Future<File> getFile(String relativePath) async {
     final vaultDir = await getVaultDirectory();
-    return File('${vaultDir.path}/$relativePath');
+    return File(p.join(vaultDir.path, relativePath));
   }
 
   Future<void> writeFile(String relativePath, String content) async {
@@ -46,7 +47,7 @@ class LocalStorageService {
 
   Future<List<FileSystemEntity>> listFiles(String relativePath) async {
     final vaultDir = await getVaultDirectory();
-    final targetDir = Directory('${vaultDir.path}/$relativePath');
+    final targetDir = Directory(p.join(vaultDir.path, relativePath));
     if (await targetDir.exists()) {
       return targetDir.listSync(recursive: false);
     }

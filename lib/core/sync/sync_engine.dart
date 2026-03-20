@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../storage/local_storage_service.dart';
 import '../network/webdav_service.dart';
@@ -37,13 +38,9 @@ class SyncEngine {
   ///
   /// [remoteBasePath] 要同步的 WebDAV 服务器根路径。
   Future<void> syncVault(String remoteBasePath) async {
-    try {
-      final vaultDir = await _local.getVaultDirectory();
-      await _pullRemote(remoteBasePath, '', vaultDir.path);
-      await _pushLocal(vaultDir.path, '', remoteBasePath);
-    } catch (e) {
-      throw Exception(e.toString());
-    }
+    final vaultDir = await _local.getVaultDirectory();
+    await _pullRemote(remoteBasePath, '', vaultDir.path);
+    await _pushLocal(vaultDir.path, '', remoteBasePath);
   }
 
   /// 递归地将远程 WebDAV 服务器文件拉取到本地存储。
@@ -109,7 +106,7 @@ class SyncEngine {
         }
       }
     } catch (e) {
-      print('Pull remote failed for $relativePath: $e');
+      debugPrint('Pull remote failed for $relativePath: $e');
     }
   }
 
