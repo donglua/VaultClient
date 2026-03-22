@@ -255,5 +255,25 @@ void main() {
 
       expect(webdav.uploaded, contains('/notes/a.md'));
     });
+
+    test('keeps conflict pull actionable on next sync', () async {
+      final localFile = File('${tempDir.path}/notes/a.md');
+      await localFile.parent.create(recursive: true);
+      await localFile.writeAsString('local-change');
+      await localFile.setLastModified(DateTime.utc(2026, 3, 20, 10));
+
+      webdav.upsertFile('/notes/a.md', 'remote-change', DateTime.utc(2026, 3, 20, 9));
+
+      await engine.syncVault('/');
+
+      final conflictFile = File('${tempDir.path}/notes/a_remote_conflict.md');
+      expect(await conflictFile.exists(), isTrue);
+
+      webdav.downloaded.clear();
+      await engine.syncVault('/');
+
+      // 若冲突场景被错误标记为“已同步”，第二次将被跳过。
+      expect(webdav.downloaded, contains('/notes/a.md'));
+    });
   });
 }

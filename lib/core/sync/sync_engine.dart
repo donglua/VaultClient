@@ -159,6 +159,11 @@ class SyncEngine {
           stats.skippedCount++;
         }
 
+        // 冲突文件仅作为旁路副本下载，不应把原文件标记为“已与远端一致”。
+        if (decision.isConflictDownload) {
+          continue;
+        }
+
         final localStat = await localFile.exists()
             ? await localFile.stat()
             : null;
