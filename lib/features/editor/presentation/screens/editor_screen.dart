@@ -33,10 +33,27 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
   Future<void> _loadFile() async {
     if (await widget.file.exists()) {
       final content = await widget.file.readAsString();
+      if (!mounted) {
+        return;
+      }
       setState(() {
         _controller.text = content;
       });
     }
+  }
+
+  @override
+  void didUpdateWidget(covariant EditorScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.file.path != widget.file.path) {
+      _loadFile();
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override

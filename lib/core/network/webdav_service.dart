@@ -36,6 +36,11 @@ class WebDAVService {
     return await client.readDir(path);
   }
 
+  /// 读取远程单个文件或目录的元数据。
+  Future<webdav.File> readProps(String path) async {
+    return await client.readProps(path);
+  }
+
   /// 在远程服务器的 [path] 路径创建目录。
   /// 如果目录已存在（HTTP 405）则忽略，其他错误继续抛出。
   Future<void> mkCol(String path) async {

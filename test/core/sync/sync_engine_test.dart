@@ -115,12 +115,40 @@ class _FakeWebDAVService extends WebDAVService {
 
   @override
   Future<void> uploadFile(String remotePath, String localFilePath) async {
-    uploaded.add(_normalize(remotePath));
+    final normalized = _normalize(remotePath);
+    uploaded.add(normalized);
+
+    final file = File(localFilePath);
+    final content = await file.readAsString();
+    _ensureDir(_parent(normalized));
+    _items[normalized] = _RemoteItem(
+      path: normalized,
+      isDir: false,
+      content: content,
+      mTime: DateTime.now().toUtc(),
+    );
   }
 
   @override
   Future<void> mkCol(String path) async {
     _ensureDir(_normalize(path));
+  }
+
+  @override
+  Future<webdav.File> readProps(String path) async {
+    final normalized = _normalize(path);
+    final item = _items[normalized];
+    if (item == null) {
+      throw Exception('Remote props not found: $path');
+    }
+
+    return webdav.File(
+      path: item.path,
+      name: item.path.split('/').last,
+      isDir: item.isDir,
+      size: item.isDir ? 0 : item.content.length,
+      mTime: item.mTime,
+    );
   }
 
   String _normalize(String path) {
@@ -150,7 +178,7 @@ class _FakeWebDAVService extends WebDAVService {
 }
 
 void main() {
-  group('SyncEngine incremental pull', () {
+  group('SyncEngine', () {
     late Directory tempDir;
     late _FakeLocalStorageService local;
     late LocalIndexService index;
@@ -200,6 +228,32 @@ void main() {
       await engine.syncVault('/');
 
       expect(webdav.downloaded, equals(<String>['/notes/a.md']));
+    });
+
+    test('does not upload when remote file metadata matches local', () async {
+      final localFile = File('${tempDir.path}/notes/a.md');
+      await localFile.parent.create(recursive: true);
+      await localFile.writeAsString('hello');
+
+      final localStat = await localFile.stat();
+      webdav.upsertFile('/notes/a.md', 'hello', localStat.modified.toUtc());
+
+      await engine.syncVault('/');
+
+      expect(webdav.uploaded, isEmpty);
+    });
+
+    test('uploads when local file changed with same size', () async {
+      final localFile = File('${tempDir.path}/notes/a.md');
+      await localFile.parent.create(recursive: true);
+
+      webdav.upsertFile('/notes/a.md', 'hello', DateTime.utc(2026, 3, 20, 8));
+      await localFile.writeAsString('world');
+      await localFile.setLastModified(DateTime.utc(2026, 3, 20, 9));
+
+      await engine.syncVault('/');
+
+      expect(webdav.uploaded, contains('/notes/a.md'));
     });
   });
 }

@@ -227,26 +227,21 @@ class SyncEngine {
         );
       } else if (entity is File) {
         try {
-          final remoteStat = await _webdav
-              .readDir(remoteItemPath)
-              .catchError((_) => <webdav.File>[]);
+          final remoteFile = await _webdav.readProps(remoteItemPath);
           bool shouldUpload = false;
 
-          if (remoteStat.isEmpty) {
-            shouldUpload = true; // 远程不存在该文件
-          } else {
-            final stat = await entity.stat();
-            final remoteFile = remoteStat.first;
-
-            if (remoteFile.mTime != null) {
-              // 仅当本地更新且大小不同时才上传
-              if (stat.modified.isAfter(remoteFile.mTime!) &&
-                  stat.size != remoteFile.size) {
-                shouldUpload = true;
-              }
-            } else {
+          final stat = await entity.stat();
+          if (remoteFile.mTime != null) {
+            // 本地更新后，只要大小或 mtime 任一不一致，就上传覆盖。
+            final sizeDiffers = stat.size != (remoteFile.size ?? 0);
+            final mTimeDiffers =
+                stat.modified.difference(remoteFile.mTime!).inSeconds.abs() >= 2;
+            if (stat.modified.isAfter(remoteFile.mTime!) &&
+                (sizeDiffers || mTimeDiffers)) {
               shouldUpload = true;
             }
+          } else {
+            shouldUpload = true;
           }
 
           if (shouldUpload) {
