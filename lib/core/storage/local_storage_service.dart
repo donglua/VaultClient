@@ -4,7 +4,13 @@ import 'package:path_provider/path_provider.dart';
 
 /// 本地文件存储服务，封装对应用文档目录下 vault 文件夹的读写操作。
 class LocalStorageService {
-  Future<Directory> getVaultDirectory() async {
+  Future<Directory>? _vaultDirectoryFuture;
+
+  Future<Directory> getVaultDirectory() {
+    return _vaultDirectoryFuture ??= _initializeVaultDirectory();
+  }
+
+  Future<Directory> _initializeVaultDirectory() async {
     final appDocDir = await getApplicationDocumentsDirectory();
     final vaultDir = Directory('${appDocDir.path}/vault');
     if (!await vaultDir.exists()) {
