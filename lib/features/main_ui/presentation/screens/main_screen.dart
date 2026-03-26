@@ -408,9 +408,8 @@ class _FileTreeWidgetState extends ConsumerState<_FileTreeWidget> {
       itemBuilder: (context, index) {
         final entity = files[index];
         final name = p.basename(entity.path);
-        final isDir = entity is Directory;
 
-        if (isDir) {
+        if (entity is Directory) {
           final isExpanded = _expandedFolders.contains(entity.path);
           return Column(
             children: [
@@ -444,34 +443,34 @@ class _FileTreeWidgetState extends ConsumerState<_FileTreeWidget> {
               if (isExpanded) ..._buildSubFiles(entity, colorScheme),
             ],
           );
-        } else {
-          // 文件项
-          return ListTile(
-            leading: Icon(
-              Icons.description_rounded,
-              color: colorScheme.secondary,
-            ),
-            title: Text(name),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-            onTap: () {
-              if (name.endsWith('.md')) {
-                ref
-                    .read(selectedFileProvider.notifier)
-                    .selectFile(entity as File);
-                if (MediaQuery.of(context).size.width < 800) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => EditorScreen(file: entity),
-                    ),
-                  );
-                }
-              }
-            },
-          );
         }
+
+        // 文件项
+        return ListTile(
+          leading: Icon(
+            Icons.description_rounded,
+            color: colorScheme.secondary,
+          ),
+          title: Text(name),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          onTap: () {
+            if (name.endsWith('.md')) {
+              ref
+                  .read(selectedFileProvider.notifier)
+                  .selectFile(entity as File);
+              if (MediaQuery.of(context).size.width < 800) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => EditorScreen(file: entity),
+                  ),
+                );
+              }
+            }
+          },
+        );
       },
     );
   }
@@ -492,9 +491,8 @@ class _FileTreeWidgetState extends ConsumerState<_FileTreeWidget> {
 
       for (final entity in subEntities) {
         final name = p.basename(entity.path);
-        final isDir = entity is Directory;
 
-        if (isDir) {
+        if (entity is Directory) {
           final isExpanded = _expandedFolders.contains(entity.path);
           subWidgets.add(
             Padding(
