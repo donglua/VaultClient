@@ -61,7 +61,7 @@ class FileTreeNotifier extends Notifier<List<FileSystemEntity>> {
     final topLevel = <String, FileSystemEntity>{};
 
     for (final entry in entries) {
-      final normalized = _normalizeRelativePath(entry.relativePath);
+      final normalized = FileTreeNotifier.normalizeRelativePath(entry.relativePath);
       if (normalized.isEmpty) {
         continue;
       }
@@ -87,7 +87,8 @@ class FileTreeNotifier extends Notifier<List<FileSystemEntity>> {
     return _sortEntities(topLevel.values.toList(growable: false));
   }
 
-  String _normalizeRelativePath(String value) {
+  @visibleForTesting
+  static String normalizeRelativePath(String value) {
     var normalized = p.posix.normalize(value.trim());
     while (normalized.startsWith('/')) {
       normalized = normalized.substring(1);
