@@ -16,7 +16,7 @@ class SelectedFileNotifier extends Notifier<File?> {
     return null;
   }
 
-  void selectFile(File file) {
+  void selectFile(File? file) {
     state = file;
   }
 }
