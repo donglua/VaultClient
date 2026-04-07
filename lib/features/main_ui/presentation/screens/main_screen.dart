@@ -13,6 +13,7 @@ import '../../../../core/utils/error_util.dart';
 import '../../../login/presentation/providers/login_provider.dart';
 import '../../../login/presentation/screens/login_screen.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/presentation/widgets/gradient_button.dart';
 
 class MainScreen extends ConsumerStatefulWidget {
   const MainScreen({super.key});
@@ -677,39 +678,13 @@ class _MobileBottomBar extends StatelessWidget {
         children: [
           const Spacer(),
           // "+ New Entry" 按钮
-          Container(
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [AppColors.brandPrimary, AppColors.brandPrimaryAlt],
-              ),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: () {}, // 待实现新建功能
-                borderRadius: BorderRadius.circular(20),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.add, color: Colors.white, size: 16),
-                      const SizedBox(width: 6),
-                      Text(
-                        'New Entry',
-                        style: GoogleFonts.inter(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+          GradientButton(
+            label: 'New Entry',
+            icon: Icons.add,
+            onTap: () {}, // 待实现新建功能
+            borderRadius: 20.0,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            iconSize: 16.0,
           ),
         ],
       ),
