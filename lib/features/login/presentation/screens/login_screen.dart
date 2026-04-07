@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:obsidian/l10n/app_localizations.dart';
+import '../../../../core/presentation/widgets/gradient_button.dart';
 import '../../../../main.dart';
 import '../providers/login_provider.dart';
 import '../../../main_ui/presentation/screens/main_screen.dart';
@@ -180,7 +181,7 @@ class _LoginCard extends StatelessWidget {
             controller: urlController,
             decoration: InputDecoration(
               hintText: 'https://vault.example.com/webdav/',
-              prefixIcon: const Icon(Icons.dns_rounded, size: 18),
+              prefixIcon: const Icon(Icons.link, size: 18),
             ),
             style: GoogleFonts.inter(fontSize: 14),
           ),
@@ -192,7 +193,7 @@ class _LoginCard extends StatelessWidget {
             controller: usernameController,
             decoration: InputDecoration(
               hintText: 'username',
-              prefixIcon: const Icon(Icons.person_outline_rounded, size: 18),
+              prefixIcon: const Icon(Icons.person, size: 18),
             ),
             style: GoogleFonts.inter(fontSize: 14),
           ),
@@ -205,7 +206,7 @@ class _LoginCard extends StatelessWidget {
             obscureText: obscurePassword,
             decoration: InputDecoration(
               hintText: '••••••••',
-              prefixIcon: const Icon(Icons.lock_outline_rounded, size: 18),
+              prefixIcon: const Icon(Icons.lock, size: 18),
               suffixIcon: IconButton(
                 icon: Icon(
                   obscurePassword
@@ -252,7 +253,7 @@ class _LoginCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(14),
           ),
           child: const Icon(
-            Icons.shield_outlined,
+            Icons.cloud_sync_rounded,
             color: Colors.white,
             size: 30,
           ),
@@ -268,7 +269,7 @@ class _LoginCard extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          'Professional Knowledge Infrastructure',
+          l10n.loginSubtitle,
           style: GoogleFonts.inter(
             fontSize: 13,
             color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
@@ -280,7 +281,7 @@ class _LoginCard extends StatelessWidget {
 
   Widget _buildFieldLabel(BuildContext context, String label) {
     return Text(
-      label.toUpperCase(),
+      label,
       style: GoogleFonts.inter(
         fontSize: 11,
         fontWeight: FontWeight.w600,
@@ -291,53 +292,16 @@ class _LoginCard extends StatelessWidget {
   }
 
   Widget _buildLoginButton(BuildContext context) {
-    return state.isLoading
-        ? const Center(
-            child: SizedBox(
-              width: 24,
-              height: 24,
-              child: CircularProgressIndicator(strokeWidth: 2),
-            ),
-          )
-        : Container(
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: [AppColors.brandPrimary, AppColors.brandPrimaryAlt],
-              ),
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: onLogin,
-                borderRadius: BorderRadius.circular(6),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Sign In to Vault',
-                        style: GoogleFonts.inter(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      const Icon(
-                        Icons.arrow_forward_rounded,
-                        color: Colors.white,
-                        size: 16,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          );
+    return GradientButton(
+      label: l10n.loginAndSync,
+      icon: Icons.login_rounded,
+      onTap: onLogin,
+      isLoading: state.isLoading,
+      iconAfterLabel: false,
+      fontSize: 14,
+      iconSize: 16,
+      padding: const EdgeInsets.symmetric(vertical: 14),
+    );
   }
 
   Widget _buildEncryptedBadge(BuildContext context) {

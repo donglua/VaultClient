@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:obsidian/l10n/app_localizations.dart';
 import 'package:path/path.dart' as p;
+import '../../../../core/presentation/widgets/gradient_button.dart';
 import '../providers/file_tree_provider.dart';
 import '../../../editor/presentation/screens/editor_screen.dart';
 import '../../../../core/sync/sync_engine.dart';
@@ -676,39 +677,13 @@ class _MobileBottomBar extends StatelessWidget {
         children: [
           const Spacer(),
           // "+ New Entry" 按钮
-          Container(
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [AppColors.brandPrimary, AppColors.brandPrimaryAlt],
-              ),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: () {}, // 待实现新建功能
-                borderRadius: BorderRadius.circular(20),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.add, color: Colors.white, size: 16),
-                      const SizedBox(width: 6),
-                      Text(
-                        'New Entry',
-                        style: GoogleFonts.inter(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+          GradientButton(
+            label: 'New Entry',
+            icon: Icons.add,
+            onTap: () {}, // 待实现新建功能
+            borderRadius: 20,
+            iconSize: 16,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           ),
         ],
       ),
