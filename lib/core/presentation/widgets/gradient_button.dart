@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../main.dart';
+import '../../../main.dart';
 
 /// A common gradient button used across the application.
 class GradientButton extends StatelessWidget {
@@ -36,9 +36,9 @@ class GradientButton extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           gradient: const LinearGradient(
-            colors: [AppColors.brandPrimary, AppColors.brandPrimaryAlt],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
+            colors: [AppColors.brandPrimaryAlt, AppColors.brandPrimary],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.circular(borderRadius),
         ),

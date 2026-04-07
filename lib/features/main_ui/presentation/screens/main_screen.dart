@@ -342,7 +342,7 @@ class _DesktopNavRail extends StatelessWidget {
             height: 36,
             decoration: BoxDecoration(
               gradient: const LinearGradient(
-                colors: [AppColors.brandPrimary, AppColors.brandPrimaryAlt],
+                colors: [AppColors.brandPrimaryAlt, AppColors.brandPrimary],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -557,7 +557,7 @@ class _MobileTopBar extends StatelessWidget {
             height: 28,
             decoration: BoxDecoration(
               gradient: const LinearGradient(
-                colors: [AppColors.brandPrimary, AppColors.brandPrimaryAlt],
+                colors: [AppColors.brandPrimaryAlt, AppColors.brandPrimary],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),

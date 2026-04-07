@@ -248,7 +248,7 @@ class _LoginCard extends StatelessWidget {
             gradient: const LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [AppColors.brandPrimary, AppColors.brandPrimaryAlt],
+              colors: [AppColors.brandPrimaryAlt, AppColors.brandPrimary],
             ),
             borderRadius: BorderRadius.circular(14),
           ),
