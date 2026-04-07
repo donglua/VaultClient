@@ -44,7 +44,9 @@ class FileTreeNotifier extends Notifier<List<FileSystemEntity>> {
       final files = await local.listFiles('');
       state = _sortEntities(files);
     } catch (e) {
-      debugPrint('[FileTreeNotifier] Failed to refresh: $e');
+      if (kDebugMode) {
+        debugPrint('[FileTreeNotifier] Failed to refresh: $e');
+      }
       state = [];
     }
   }

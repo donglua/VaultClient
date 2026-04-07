@@ -875,7 +875,9 @@ class _FileTreeWidgetState extends ConsumerState<_FileTreeWidget> {
         }
       }
     } catch (e) {
-      debugPrint('Error reading subfiles of ${dir.path}: $e');
+      if (kDebugMode) {
+        debugPrint('Error reading subfiles of ${dir.path}: $e');
+      }
     }
     return widgets;
   }
