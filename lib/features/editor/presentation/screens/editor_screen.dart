@@ -8,6 +8,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as p;
 import 'package:obsidian/l10n/app_localizations.dart';
 import 'package:obsidian/core/theme/app_colors.dart';
+import 'package:obsidian/core/presentation/widgets/gradient_button.dart';
 import '../utils/markdown_utils.dart';
 
 /// 支持 Obsidian 扩展语法（WikiLinks）的 Markdown 编辑器和预览页面。
@@ -397,7 +398,7 @@ class _DesktopEditorTopBar extends StatelessWidget {
           ),
           const SizedBox(width: 12),
           // Save Changes 按钮
-          _GradientButton(
+          GradientButton(
             label: l10n.save,
             icon: Icons.save_outlined,
             onTap: onSave,
@@ -738,7 +739,7 @@ class _DocumentDetailPanel extends StatelessWidget {
           const Spacer(),
 
           // Save Changes 按钮
-          _GradientButton(
+          GradientButton(
             label: 'Save Changes',
             icon: Icons.save_outlined,
             onTap: onSave,
@@ -878,76 +879,6 @@ class _TopBarIconButton extends StatelessWidget {
                           : (isDark
                               ? AppColors.darkTextSecondary
                               : AppColors.lightTextSecondary),
-                    ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _GradientButton extends StatelessWidget {
-  final String label;
-  final IconData icon;
-  final VoidCallback onTap;
-  final bool isLoading;
-  final double? width;
-
-  const _GradientButton({
-    required this.label,
-    required this.icon,
-    required this.onTap,
-    this.isLoading = false,
-    this.width,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: width,
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [AppColors.brandPrimary, AppColors.brandPrimaryAlt],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-          ),
-          borderRadius: BorderRadius.circular(6),
-        ),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: isLoading ? null : onTap,
-            borderRadius: BorderRadius.circular(6),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-              child: isLoading
-                  ? const Center(
-                      child: SizedBox(
-                        width: 14,
-                        height: 14,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: Colors.white,
-                        ),
-                      ),
-                    )
-                  : Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(icon, size: 14, color: Colors.white),
-                        const SizedBox(width: 6),
-                        Text(
-                          label,
-                          style: GoogleFonts.inter(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
                     ),
             ),
           ),
