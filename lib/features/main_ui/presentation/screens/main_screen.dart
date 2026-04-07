@@ -11,7 +11,7 @@ import '../../../../core/sync/sync_engine.dart';
 import '../../../../core/utils/error_util.dart';
 import '../../../login/presentation/providers/login_provider.dart';
 import '../../../login/presentation/screens/login_screen.dart';
-import '../../../../main.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class MainScreen extends ConsumerStatefulWidget {
   const MainScreen({super.key});
