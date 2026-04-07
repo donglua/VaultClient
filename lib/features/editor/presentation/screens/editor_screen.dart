@@ -7,8 +7,8 @@ import 'package:markdown/markdown.dart' as md;
 import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as p;
 import 'package:obsidian/l10n/app_localizations.dart';
+import 'package:obsidian/core/theme/app_colors.dart';
 import '../utils/markdown_utils.dart';
-import '../../../../main.dart';
 
 /// 支持 Obsidian 扩展语法（WikiLinks）的 Markdown 编辑器和预览页面。
 class EditorScreen extends ConsumerStatefulWidget {

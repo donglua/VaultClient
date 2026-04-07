@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:obsidian/core/theme/app_colors.dart';
 import 'package:obsidian/l10n/app_localizations.dart';
-import '../../../../main.dart';
 import '../providers/login_provider.dart';
 import '../../../main_ui/presentation/screens/main_screen.dart';
 
