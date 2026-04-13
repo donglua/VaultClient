@@ -12,11 +12,7 @@ class WebDAVService {
   /// [username] 认证用户名。
   /// [password] 认证密码或应用令牌。
   void init(String url, String username, String password) {
-    client = webdav.newClient(
-      url,
-      user: username,
-      password: password,
-    );
+    client = webdav.newClient(url, user: username, password: password);
   }
 
   /// 检测服务器连通性并验证凭证。

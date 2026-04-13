@@ -43,7 +43,10 @@ void main() {
     });
 
     test('should handle complex cases', () {
-      expect(FileTreeNotifier.normalizeRelativePath('  /./a//b/../c/  '), 'a/c');
+      expect(
+        FileTreeNotifier.normalizeRelativePath('  /./a//b/../c/  '),
+        'a/c',
+      );
     });
   });
 }

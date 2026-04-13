@@ -103,7 +103,11 @@ class _MainScreenState extends ConsumerState<MainScreen>
                 color: AppColors.success.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(6),
               ),
-              child: Icon(Icons.check_rounded, color: AppColors.success, size: 16),
+              child: Icon(
+                Icons.check_rounded,
+                color: AppColors.success,
+                size: 16,
+              ),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -113,7 +117,10 @@ class _MainScreenState extends ConsumerState<MainScreen>
                 children: [
                   Text(
                     AppLocalizations.of(context)!.syncSuccess,
-                    style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 13),
+                    style: GoogleFonts.inter(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                    ),
                   ),
                   Text(
                     '↓${result.downloadedCount}  ✓${result.scannedCount}  ${result.elapsed.inMilliseconds}ms',
@@ -146,7 +153,10 @@ class _MainScreenState extends ConsumerState<MainScreen>
                 children: [
                   Text(
                     AppLocalizations.of(context)!.syncFailed,
-                    style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 13),
+                    style: GoogleFonts.inter(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                    ),
                   ),
                   Text(errorMsg, style: GoogleFonts.inter(fontSize: 12)),
                 ],
@@ -238,8 +248,9 @@ class _MainScreenState extends ConsumerState<MainScreen>
                     _MobileBreadcrumb(
                       file: selectedFile,
                       isDark: isDark,
-                      onBack: () =>
-                          ref.read(selectedFileProvider.notifier).selectFile(null),
+                      onBack: () => ref
+                          .read(selectedFileProvider.notifier)
+                          .selectFile(null),
                     ),
                     Expanded(
                       child: EditorScreen(file: selectedFile, isDesktop: false),
@@ -263,13 +274,18 @@ class _MainScreenState extends ConsumerState<MainScreen>
       builder: (BuildContext ctx) {
         final l10n = AppLocalizations.of(ctx)!;
         return AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           icon: Icon(Icons.logout_rounded, color: AppColors.error, size: 40),
-          title: Text(l10n.logoutTitle,
-              style: GoogleFonts.manrope(fontWeight: FontWeight.w700)),
-          content: Text(l10n.logoutConfirm,
-              style: GoogleFonts.inter(fontSize: 14)),
+          title: Text(
+            l10n.logoutTitle,
+            style: GoogleFonts.manrope(fontWeight: FontWeight.w700),
+          ),
+          content: Text(
+            l10n.logoutConfirm,
+            style: GoogleFonts.inter(fontSize: 14),
+          ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(ctx).pop(),
@@ -292,9 +308,9 @@ class _MainScreenState extends ConsumerState<MainScreen>
   void _logout() {
     ref.read(webdavLoginProvider.notifier).logout();
     if (mounted) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => LoginScreen()),
-      );
+      Navigator.of(
+        context,
+      ).pushReplacement(MaterialPageRoute(builder: (_) => LoginScreen()));
     }
   }
 }
@@ -328,8 +344,9 @@ class _DesktopNavRail extends StatelessWidget {
   Widget build(BuildContext context) {
     final bg = isDark ? AppColors.darkSurface : AppColors.lightSurface;
     final activeColor = AppColors.brandPrimaryAlt;
-    final inactiveColor =
-        isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final inactiveColor = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextSecondary;
 
     return Container(
       width: 64,
@@ -349,7 +366,11 @@ class _DesktopNavRail extends StatelessWidget {
               ),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: const Icon(Icons.shield_outlined, color: Colors.white, size: 20),
+            child: const Icon(
+              Icons.shield_outlined,
+              color: Colors.white,
+              size: 20,
+            ),
           ),
           const SizedBox(height: 20),
           // 收起/展开侧栏按钮
@@ -434,9 +455,7 @@ class _NavIconButton extends StatelessWidget {
       message: tooltip,
       preferBelow: false,
       child: Material(
-        color: isActive
-            ? AppColors.brandPrimaryContainer
-            : Colors.transparent,
+        color: isActive ? AppColors.brandPrimaryContainer : Colors.transparent,
         borderRadius: BorderRadius.circular(8),
         child: InkWell(
           onTap: onTap,
@@ -475,7 +494,9 @@ class _FilePanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bg = isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceLow;
+    final bg = isDark
+        ? AppColors.darkSurfaceElevated
+        : AppColors.lightSurfaceLow;
     return Container(
       color: bg,
       child: Column(
@@ -564,7 +585,11 @@ class _MobileTopBar extends StatelessWidget {
               ),
               borderRadius: BorderRadius.circular(6),
             ),
-            child: const Icon(Icons.shield_outlined, color: Colors.white, size: 16),
+            child: const Icon(
+              Icons.shield_outlined,
+              color: Colors.white,
+              size: 16,
+            ),
           ),
           const SizedBox(width: 10),
           Text(
@@ -752,28 +777,27 @@ class _FileTreeWidgetState extends ConsumerState<_FileTreeWidget> {
     );
   }
 
-  Widget _buildFolderItem(
-      Directory dir, String name, int depth, bool isDark) {
+  Widget _buildFolderItem(Directory dir, String name, int depth, bool isDark) {
     final isExpanded = _expandedFolders.contains(dir.path);
     final activeColor = AppColors.brandPrimaryAlt;
-    final inactiveColor =
-        isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final inactiveColor = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextSecondary;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _TreeItemTile(
           depth: depth,
-          icon: isExpanded
-              ? Icons.folder_open_outlined
-              : Icons.folder_outlined,
+          icon: isExpanded ? Icons.folder_open_outlined : Icons.folder_outlined,
           iconColor: activeColor,
           label: name,
           labelStyle: GoogleFonts.inter(
             fontSize: 13,
             fontWeight: FontWeight.w600,
-            color:
-                isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
           ),
           trailing: Icon(
             isExpanded
@@ -806,16 +830,16 @@ class _FileTreeWidgetState extends ConsumerState<_FileTreeWidget> {
       icon: Icons.description_outlined,
       iconColor: isSelected
           ? AppColors.brandPrimaryAlt
-          : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+          : (isDark
+                ? AppColors.darkTextSecondary
+                : AppColors.lightTextSecondary),
       label: name,
       labelStyle: GoogleFonts.inter(
         fontSize: 13,
         fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
         color: isSelected
             ? AppColors.brandPrimaryAlt
-            : (isDark
-                ? AppColors.darkTextPrimary
-                : AppColors.lightTextPrimary),
+            : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
       ),
       isSelected: isSelected,
       onTap: () {
@@ -886,19 +910,14 @@ class _TreeItemTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: isSelected
-          ? AppColors.brandPrimaryContainer
-          : Colors.transparent,
+      color: isSelected ? AppColors.brandPrimaryContainer : Colors.transparent,
       borderRadius: BorderRadius.circular(6),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(6),
         child: Container(
           height: 34,
-          padding: EdgeInsets.only(
-            left: 8.0 + depth * 16.0,
-            right: 8,
-          ),
+          padding: EdgeInsets.only(left: 8.0 + depth * 16.0, right: 8),
           // 激活项左侧蓝色竖条
           decoration: isSelected
               ? BoxDecoration(
@@ -916,7 +935,11 @@ class _TreeItemTile extends StatelessWidget {
               Icon(icon, size: 15, color: iconColor),
               const SizedBox(width: 8),
               Expanded(
-                child: Text(label, style: labelStyle, overflow: TextOverflow.ellipsis),
+                child: Text(
+                  label,
+                  style: labelStyle,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
               ?trailing,
             ],

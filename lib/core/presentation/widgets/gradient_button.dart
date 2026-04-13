@@ -77,7 +77,11 @@ class GradientButton extends StatelessWidget {
                         ),
                         if (trailingIcon != null) ...[
                           const SizedBox(width: 8),
-                          Icon(trailingIcon, size: iconSize, color: Colors.white),
+                          Icon(
+                            trailingIcon,
+                            size: iconSize,
+                            color: Colors.white,
+                          ),
                         ],
                       ],
                     ),

@@ -14,12 +14,20 @@ void main() {
   }
 
   group('ErrorUtil.getFriendlyErrorMessage', () {
-    testWidgets('returns accountExpired for account and expired keywords', (WidgetTester tester) async {
+    testWidgets('returns accountExpired for account and expired keywords', (
+      WidgetTester tester,
+    ) async {
       late BuildContext context;
-      await tester.pumpWidget(createTestWidget(Builder(builder: (ctx) {
-        context = ctx;
-        return const SizedBox();
-      })));
+      await tester.pumpWidget(
+        createTestWidget(
+          Builder(
+            builder: (ctx) {
+              context = ctx;
+              return const SizedBox();
+            },
+          ),
+        ),
+      );
 
       final l10n = AppLocalizations.of(context)!;
       expect(
@@ -28,12 +36,20 @@ void main() {
       );
     });
 
-    testWidgets('returns authFailed for Authentication or 401 keywords', (WidgetTester tester) async {
+    testWidgets('returns authFailed for Authentication or 401 keywords', (
+      WidgetTester tester,
+    ) async {
       late BuildContext context;
-      await tester.pumpWidget(createTestWidget(Builder(builder: (ctx) {
-        context = ctx;
-        return const SizedBox();
-      })));
+      await tester.pumpWidget(
+        createTestWidget(
+          Builder(
+            builder: (ctx) {
+              context = ctx;
+              return const SizedBox();
+            },
+          ),
+        ),
+      );
 
       final l10n = AppLocalizations.of(context)!;
       expect(
@@ -46,12 +62,20 @@ void main() {
       );
     });
 
-    testWidgets('returns noPermission for 403 keyword', (WidgetTester tester) async {
+    testWidgets('returns noPermission for 403 keyword', (
+      WidgetTester tester,
+    ) async {
       late BuildContext context;
-      await tester.pumpWidget(createTestWidget(Builder(builder: (ctx) {
-        context = ctx;
-        return const SizedBox();
-      })));
+      await tester.pumpWidget(
+        createTestWidget(
+          Builder(
+            builder: (ctx) {
+              context = ctx;
+              return const SizedBox();
+            },
+          ),
+        ),
+      );
 
       final l10n = AppLocalizations.of(context)!;
       expect(
@@ -60,12 +84,20 @@ void main() {
       );
     });
 
-    testWidgets('returns fileNotFound for 404 keyword', (WidgetTester tester) async {
+    testWidgets('returns fileNotFound for 404 keyword', (
+      WidgetTester tester,
+    ) async {
       late BuildContext context;
-      await tester.pumpWidget(createTestWidget(Builder(builder: (ctx) {
-        context = ctx;
-        return const SizedBox();
-      })));
+      await tester.pumpWidget(
+        createTestWidget(
+          Builder(
+            builder: (ctx) {
+              context = ctx;
+              return const SizedBox();
+            },
+          ),
+        ),
+      );
 
       final l10n = AppLocalizations.of(context)!;
       expect(
@@ -74,12 +106,20 @@ void main() {
       );
     });
 
-    testWidgets('returns networkTimeout for timeout or Timeout keywords', (WidgetTester tester) async {
+    testWidgets('returns networkTimeout for timeout or Timeout keywords', (
+      WidgetTester tester,
+    ) async {
       late BuildContext context;
-      await tester.pumpWidget(createTestWidget(Builder(builder: (ctx) {
-        context = ctx;
-        return const SizedBox();
-      })));
+      await tester.pumpWidget(
+        createTestWidget(
+          Builder(
+            builder: (ctx) {
+              context = ctx;
+              return const SizedBox();
+            },
+          ),
+        ),
+      );
 
       final l10n = AppLocalizations.of(context)!;
       expect(
@@ -92,34 +132,54 @@ void main() {
       );
     });
 
-    testWidgets('returns cannotConnect for Connection, connection or SocketException keywords', (WidgetTester tester) async {
-      late BuildContext context;
-      await tester.pumpWidget(createTestWidget(Builder(builder: (ctx) {
-        context = ctx;
-        return const SizedBox();
-      })));
+    testWidgets(
+      'returns cannotConnect for Connection, connection or SocketException keywords',
+      (WidgetTester tester) async {
+        late BuildContext context;
+        await tester.pumpWidget(
+          createTestWidget(
+            Builder(
+              builder: (ctx) {
+                context = ctx;
+                return const SizedBox();
+              },
+            ),
+          ),
+        );
 
-      final l10n = AppLocalizations.of(context)!;
-      expect(
-        ErrorUtil.getFriendlyErrorMessage(context, 'Connection refused'),
-        l10n.cannotConnect,
-      );
-      expect(
-        ErrorUtil.getFriendlyErrorMessage(context, 'no connection'),
-        l10n.cannotConnect,
-      );
-      expect(
-        ErrorUtil.getFriendlyErrorMessage(context, 'SocketException: OS Error'),
-        l10n.cannotConnect,
-      );
-    });
+        final l10n = AppLocalizations.of(context)!;
+        expect(
+          ErrorUtil.getFriendlyErrorMessage(context, 'Connection refused'),
+          l10n.cannotConnect,
+        );
+        expect(
+          ErrorUtil.getFriendlyErrorMessage(context, 'no connection'),
+          l10n.cannotConnect,
+        );
+        expect(
+          ErrorUtil.getFriendlyErrorMessage(
+            context,
+            'SocketException: OS Error',
+          ),
+          l10n.cannotConnect,
+        );
+      },
+    );
 
-    testWidgets('returns networkError for XMLHttpRequest error keyword', (WidgetTester tester) async {
+    testWidgets('returns networkError for XMLHttpRequest error keyword', (
+      WidgetTester tester,
+    ) async {
       late BuildContext context;
-      await tester.pumpWidget(createTestWidget(Builder(builder: (ctx) {
-        context = ctx;
-        return const SizedBox();
-      })));
+      await tester.pumpWidget(
+        createTestWidget(
+          Builder(
+            builder: (ctx) {
+              context = ctx;
+              return const SizedBox();
+            },
+          ),
+        ),
+      );
 
       final l10n = AppLocalizations.of(context)!;
       expect(
@@ -128,33 +188,43 @@ void main() {
       );
     });
 
-    testWidgets('returns original message if not matched and short', (WidgetTester tester) async {
+    testWidgets('returns original message if not matched and short', (
+      WidgetTester tester,
+    ) async {
       late BuildContext context;
-      await tester.pumpWidget(createTestWidget(Builder(builder: (ctx) {
-        context = ctx;
-        return const SizedBox();
-      })));
+      await tester.pumpWidget(
+        createTestWidget(
+          Builder(
+            builder: (ctx) {
+              context = ctx;
+              return const SizedBox();
+            },
+          ),
+        ),
+      );
 
       const error = 'Some random error message';
-      expect(
-        ErrorUtil.getFriendlyErrorMessage(context, error),
-        error,
-      );
+      expect(ErrorUtil.getFriendlyErrorMessage(context, error), error);
     });
 
-    testWidgets('returns truncated message if not matched and long', (WidgetTester tester) async {
+    testWidgets('returns truncated message if not matched and long', (
+      WidgetTester tester,
+    ) async {
       late BuildContext context;
-      await tester.pumpWidget(createTestWidget(Builder(builder: (ctx) {
-        context = ctx;
-        return const SizedBox();
-      })));
+      await tester.pumpWidget(
+        createTestWidget(
+          Builder(
+            builder: (ctx) {
+              context = ctx;
+              return const SizedBox();
+            },
+          ),
+        ),
+      );
 
       final longError = 'A' * 150;
       final expected = '${'A' * 100}...';
-      expect(
-        ErrorUtil.getFriendlyErrorMessage(context, longError),
-        expected,
-      );
+      expect(ErrorUtil.getFriendlyErrorMessage(context, longError), expected);
     });
   });
 }

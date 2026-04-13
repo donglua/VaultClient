@@ -4,9 +4,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../../../core/sync/sync_engine.dart';
 
-final webdavLoginProvider = NotifierProvider<WebDAVLoginNotifier, WebDAVLoginState>(() {
-  return WebDAVLoginNotifier();
-});
+final webdavLoginProvider =
+    NotifierProvider<WebDAVLoginNotifier, WebDAVLoginState>(() {
+      return WebDAVLoginNotifier();
+    });
 
 class WebDAVLoginState {
   final bool isLoading;
@@ -63,7 +64,10 @@ class WebDAVLoginNotifier extends Notifier<WebDAVLoginState> {
         state = state.copyWith(isLoading: false);
         return true;
       } else {
-        state = state.copyWith(isLoading: false, error: 'serverErrorCheckConfig');
+        state = state.copyWith(
+          isLoading: false,
+          error: 'serverErrorCheckConfig',
+        );
         return false;
       }
     } catch (e) {
@@ -77,13 +81,13 @@ class WebDAVLoginNotifier extends Notifier<WebDAVLoginState> {
     await _secureStorage.delete(key: 'webdav_url');
     await _secureStorage.delete(key: 'webdav_username');
     await _secureStorage.delete(key: 'webdav_password');
-    
+
     // 清理 SharedPreferences 中的凭证（如果存在）
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('webdav_url');
     await prefs.remove('webdav_username');
     await prefs.remove('webdav_password');
-    
+
     // 重置状态
     state = WebDAVLoginState();
   }

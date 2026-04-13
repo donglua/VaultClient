@@ -203,8 +203,7 @@ class SyncEngine {
       return;
     }
 
-    final entities = localDir.listSync(recursive: false);
-    for (final entity in entities) {
+    await for (final entity in localDir.list(recursive: false)) {
       final name = p.basename(entity.path);
 
       // 索引文件是本地内部实现细节，不应同步到远程。
@@ -242,7 +241,8 @@ class SyncEngine {
             // 本地更新后，只要大小或 mtime 任一不一致，就上传覆盖。
             final sizeDiffers = stat.size != (remoteFile.size ?? 0);
             final mTimeDiffers =
-                stat.modified.difference(remoteFile.mTime!).inSeconds.abs() >= 2;
+                stat.modified.difference(remoteFile.mTime!).inSeconds.abs() >=
+                2;
             if (stat.modified.isAfter(remoteFile.mTime!) &&
                 (sizeDiffers || mTimeDiffers)) {
               shouldUpload = true;

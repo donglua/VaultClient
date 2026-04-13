@@ -262,7 +262,11 @@ void main() {
       await localFile.writeAsString('local-change');
       await localFile.setLastModified(DateTime.utc(2026, 3, 20, 10));
 
-      webdav.upsertFile('/notes/a.md', 'remote-change', DateTime.utc(2026, 3, 20, 9));
+      webdav.upsertFile(
+        '/notes/a.md',
+        'remote-change',
+        DateTime.utc(2026, 3, 20, 9),
+      );
 
       await engine.syncVault('/');
 

@@ -17,8 +17,8 @@ class AppColors {
   static const info = Color(0xFF0EA5E9);
 
   // 亮色中性色
-  static const lightBg = Color(0xFFF8FAFC);       // 页面背景
-  static const lightSurface = Color(0xFFFFFFFF);  // 卡片/组件
+  static const lightBg = Color(0xFFF8FAFC); // 页面背景
+  static const lightSurface = Color(0xFFFFFFFF); // 卡片/组件
   static const lightSurfaceLow = Color(0xFFF2F3FF); // 侧栏背景
   static const lightSurfaceHigh = Color(0xFFEAEDFF); // 高亮背景
   static const lightBorder = Color(0xFFCBD5E1);

@@ -55,7 +55,7 @@ class LocalStorageService {
     final vaultDir = await getVaultDirectory();
     final targetDir = Directory(p.join(vaultDir.path, relativePath));
     if (await targetDir.exists()) {
-      return targetDir.listSync(recursive: false);
+      return await targetDir.list(recursive: false).toList();
     }
     return [];
   }
