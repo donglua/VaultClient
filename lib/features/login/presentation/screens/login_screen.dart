@@ -50,11 +50,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   void _login() async {
-    final success = await ref.read(webdavLoginProvider.notifier).login(
-      _urlController.text,
-      _usernameController.text,
-      _passwordController.text,
-    );
+    final success = await ref
+        .read(webdavLoginProvider.notifier)
+        .login(
+          _urlController.text,
+          _usernameController.text,
+          _passwordController.text,
+        );
 
     if (success && mounted) {
       Navigator.pushReplacement(
@@ -264,7 +266,9 @@ class _LoginCard extends StatelessWidget {
           style: GoogleFonts.manrope(
             fontSize: 24,
             fontWeight: FontWeight.w700,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
           ),
         ),
         const SizedBox(height: 4),
@@ -272,7 +276,9 @@ class _LoginCard extends StatelessWidget {
           'Professional Knowledge Infrastructure',
           style: GoogleFonts.inter(
             fontSize: 13,
-            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+            color: isDark
+                ? AppColors.darkTextSecondary
+                : AppColors.lightTextSecondary,
           ),
         ),
       ],
@@ -286,7 +292,9 @@ class _LoginCard extends StatelessWidget {
         fontSize: 11,
         fontWeight: FontWeight.w600,
         letterSpacing: 0.6,
-        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+        color: isDark
+            ? AppColors.darkTextSecondary
+            : AppColors.lightTextSecondary,
       ),
     );
   }
@@ -314,11 +322,7 @@ class _LoginCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.lock_rounded,
-            size: 13,
-            color: AppColors.success,
-          ),
+          Icon(Icons.lock_rounded, size: 13, color: AppColors.success),
           const SizedBox(width: 6),
           Flexible(
             child: Text(
@@ -373,10 +377,7 @@ class _FooterDivider extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Text(
-        '·',
-        style: TextStyle(color: AppColors.lightTextTertiary),
-      ),
+      child: Text('·', style: TextStyle(color: AppColors.lightTextTertiary)),
     );
   }
 }

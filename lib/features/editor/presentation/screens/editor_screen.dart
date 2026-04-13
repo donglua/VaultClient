@@ -70,7 +70,11 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
           SnackBar(
             content: Row(
               children: [
-                const Icon(Icons.check_circle_outline, size: 16, color: Colors.white),
+                const Icon(
+                  Icons.check_circle_outline,
+                  size: 16,
+                  color: Colors.white,
+                ),
                 const SizedBox(width: 8),
                 Text(
                   AppLocalizations.of(context)!.savedLocally,
@@ -80,7 +84,9 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
             ),
             backgroundColor: AppColors.success,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(6),
+            ),
             duration: const Duration(seconds: 2),
           ),
         );
@@ -206,7 +212,9 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
         style: GoogleFonts.inter(
           fontSize: 15,
           height: 1.75,
-          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+          color: isDark
+              ? AppColors.darkTextPrimary
+              : AppColors.lightTextPrimary,
         ),
         decoration: InputDecoration(
           hintText: AppLocalizations.of(context)!.writeMarkdownHere,
@@ -228,8 +236,7 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
         extensionSet: md.ExtensionSet.gitHubFlavored,
         inlineSyntaxes: [ObsidianSyntax()],
         builders: {
-          'obsidian_link':
-              ObsidianLinkBuilder(context, widget.file.path, ref),
+          'obsidian_link': ObsidianLinkBuilder(context, widget.file.path, ref),
         },
         styleSheet: MarkdownStyleSheet(
           p: GoogleFonts.inter(
@@ -287,12 +294,16 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
       final obsidianInsert = '![[$fileName]]\n';
 
       if (selection.start >= 0 && selection.end >= 0) {
-        final newText =
-            text.replaceRange(selection.start, selection.end, obsidianInsert);
+        final newText = text.replaceRange(
+          selection.start,
+          selection.end,
+          obsidianInsert,
+        );
         _controller.value = _controller.value.copyWith(
           text: newText,
           selection: TextSelection.collapsed(
-              offset: selection.start + obsidianInsert.length),
+            offset: selection.start + obsidianInsert.length,
+          ),
         );
       } else {
         _controller.text = text + obsidianInsert;
@@ -340,8 +351,9 @@ class _DesktopEditorTopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bgColor = isDark ? AppColors.darkSurface : AppColors.lightSurface;
-    final textSecondary =
-        isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final textSecondary = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextSecondary;
 
     return Container(
       height: 52,
@@ -363,7 +375,10 @@ class _DesktopEditorTopBar extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 6),
-            child: Text('/', style: TextStyle(color: textSecondary, fontSize: 12)),
+            child: Text(
+              '/',
+              style: TextStyle(color: textSecondary, fontSize: 12),
+            ),
           ),
           Text(
             p.basename(file.path),
@@ -494,7 +509,11 @@ class _MarkdownToolbar extends StatelessWidget {
     if (selection.start < 0) return;
     final selectedText = selection.textInside(text);
     final replacement = '$prefix$selectedText${suffix ?? prefix}';
-    final newText = text.replaceRange(selection.start, selection.end, replacement);
+    final newText = text.replaceRange(
+      selection.start,
+      selection.end,
+      replacement,
+    );
     controller.value = controller.value.copyWith(
       text: newText,
       selection: TextSelection.collapsed(
@@ -517,10 +536,12 @@ class _MarkdownToolbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bgColor =
-        isDark ? AppColors.darkSurfaceElevated : const Color(0xFFF5F7FF);
-    final iconColor =
-        isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final bgColor = isDark
+        ? AppColors.darkSurfaceElevated
+        : const Color(0xFFF5F7FF);
+    final iconColor = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextSecondary;
 
     return Container(
       height: 40,
@@ -530,43 +551,85 @@ class _MarkdownToolbar extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         child: Row(
           children: [
-            _ToolbarBtn(icon: Icons.format_bold, tooltip: 'Bold', color: iconColor,
-                onTap: () => _wrapSelection('**')),
-            _ToolbarBtn(icon: Icons.format_italic, tooltip: 'Italic', color: iconColor,
-                onTap: () => _wrapSelection('*')),
-            _ToolbarBtn(icon: Icons.format_strikethrough, tooltip: 'Strikethrough', color: iconColor,
-                onTap: () => _wrapSelection('~~')),
+            _ToolbarBtn(
+              icon: Icons.format_bold,
+              tooltip: 'Bold',
+              color: iconColor,
+              onTap: () => _wrapSelection('**'),
+            ),
+            _ToolbarBtn(
+              icon: Icons.format_italic,
+              tooltip: 'Italic',
+              color: iconColor,
+              onTap: () => _wrapSelection('*'),
+            ),
+            _ToolbarBtn(
+              icon: Icons.format_strikethrough,
+              tooltip: 'Strikethrough',
+              color: iconColor,
+              onTap: () => _wrapSelection('~~'),
+            ),
             _ToolbarDivider(),
-            _ToolbarBtn(icon: Icons.format_quote, tooltip: 'Quote', color: iconColor,
-                onTap: () => _insertLine('>')),
-            _ToolbarBtn(icon: Icons.code, tooltip: 'Inline code', color: iconColor,
-                onTap: () => _wrapSelection('`')),
+            _ToolbarBtn(
+              icon: Icons.format_quote,
+              tooltip: 'Quote',
+              color: iconColor,
+              onTap: () => _insertLine('>'),
+            ),
+            _ToolbarBtn(
+              icon: Icons.code,
+              tooltip: 'Inline code',
+              color: iconColor,
+              onTap: () => _wrapSelection('`'),
+            ),
             _ToolbarDivider(),
-            _ToolbarBtn(icon: Icons.format_list_bulleted, tooltip: 'Bullet list', color: iconColor,
-                onTap: () => _insertLine('-')),
-            _ToolbarBtn(icon: Icons.format_list_numbered, tooltip: 'Numbered list', color: iconColor,
-                onTap: () => _insertLine('1.')),
+            _ToolbarBtn(
+              icon: Icons.format_list_bulleted,
+              tooltip: 'Bullet list',
+              color: iconColor,
+              onTap: () => _insertLine('-'),
+            ),
+            _ToolbarBtn(
+              icon: Icons.format_list_numbered,
+              tooltip: 'Numbered list',
+              color: iconColor,
+              onTap: () => _insertLine('1.'),
+            ),
             _ToolbarDivider(),
-            _ToolbarBtn(icon: Icons.image_outlined, tooltip: 'Insert image', color: iconColor,
-                onTap: onInsertImage),
-            _ToolbarBtn(icon: Icons.link, tooltip: 'Insert link', color: iconColor,
-                onTap: () => _wrapSelection('[', '](url)')),
-            _ToolbarBtn(icon: Icons.table_chart_outlined, tooltip: 'Insert table', color: iconColor,
-                onTap: () {
-                  const tableTemplate =
-                      '\n| Header 1 | Header 2 |\n| --- | --- |\n| Cell 1 | Cell 2 |\n';
-                  final pos = controller.selection.start < 0
-                      ? controller.text.length
-                      : controller.selection.start;
-                  final newText = controller.text.substring(0, pos) +
-                      tableTemplate +
-                      controller.text.substring(pos);
-                  controller.value = controller.value.copyWith(
-                    text: newText,
-                    selection: TextSelection.collapsed(
-                        offset: pos + tableTemplate.length),
-                  );
-                }),
+            _ToolbarBtn(
+              icon: Icons.image_outlined,
+              tooltip: 'Insert image',
+              color: iconColor,
+              onTap: onInsertImage,
+            ),
+            _ToolbarBtn(
+              icon: Icons.link,
+              tooltip: 'Insert link',
+              color: iconColor,
+              onTap: () => _wrapSelection('[', '](url)'),
+            ),
+            _ToolbarBtn(
+              icon: Icons.table_chart_outlined,
+              tooltip: 'Insert table',
+              color: iconColor,
+              onTap: () {
+                const tableTemplate =
+                    '\n| Header 1 | Header 2 |\n| --- | --- |\n| Cell 1 | Cell 2 |\n';
+                final pos = controller.selection.start < 0
+                    ? controller.text.length
+                    : controller.selection.start;
+                final newText =
+                    controller.text.substring(0, pos) +
+                    tableTemplate +
+                    controller.text.substring(pos);
+                controller.value = controller.value.copyWith(
+                  text: newText,
+                  selection: TextSelection.collapsed(
+                    offset: pos + tableTemplate.length,
+                  ),
+                );
+              },
+            ),
           ],
         ),
       ),
@@ -639,12 +702,17 @@ class _DocumentDetailPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bgColor =
-        isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceLow;
-    final textSecondary =
-        isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final bgColor = isDark
+        ? AppColors.darkSurfaceElevated
+        : AppColors.lightSurfaceLow;
+    final textSecondary = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextSecondary;
     final fileName = p.basename(file.path);
-    final extension = p.extension(file.path).replaceFirst('.', '').toUpperCase();
+    final extension = p
+        .extension(file.path)
+        .replaceFirst('.', '')
+        .toUpperCase();
 
     return Container(
       width: 220,
@@ -666,11 +734,7 @@ class _DocumentDetailPanel extends StatelessWidget {
           const SizedBox(height: 16),
 
           // 文件名
-          _DetailRow(
-            label: 'FILE',
-            value: fileName,
-            isDark: isDark,
-          ),
+          _DetailRow(label: 'FILE', value: fileName, isDark: isDark),
           const SizedBox(height: 12),
 
           // 类型
@@ -679,8 +743,7 @@ class _DocumentDetailPanel extends StatelessWidget {
             value: extension,
             isDark: isDark,
             valueWidget: Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
               decoration: BoxDecoration(
                 color: AppColors.brandPrimaryContainer,
                 borderRadius: BorderRadius.circular(4),
@@ -698,15 +761,14 @@ class _DocumentDetailPanel extends StatelessWidget {
           const SizedBox(height: 20),
 
           // 分割线（用 spacing 不用 Divider）
-          Container(height: 1, color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+          Container(
+            height: 1,
+            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          ),
           const SizedBox(height: 16),
 
           // 字数
-          _DetailRow(
-            label: 'WORDS',
-            value: '$wordCount',
-            isDark: isDark,
-          ),
+          _DetailRow(label: 'WORDS', value: '$wordCount', isDark: isDark),
           const SizedBox(height: 12),
 
           // 阅读时间
@@ -733,7 +795,11 @@ class _DocumentDetailPanel extends StatelessWidget {
             runSpacing: 6,
             children: [
               _Tag(label: 'markdown', isDark: isDark),
-              _Tag(label: 'vault', isDark: isDark, color: AppColors.brandSecondary),
+              _Tag(
+                label: 'vault',
+                isDark: isDark,
+                color: AppColors.brandSecondary,
+              ),
             ],
           ),
           const Spacer(),
@@ -767,10 +833,12 @@ class _DetailRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textPrimary =
-        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final textSecondary =
-        isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final textPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final textSecondary = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextSecondary;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -854,9 +922,7 @@ class _TopBarIconButton extends StatelessWidget {
     return Tooltip(
       message: tooltip,
       child: Material(
-        color: isActive
-            ? AppColors.brandPrimaryContainer
-            : Colors.transparent,
+        color: isActive ? AppColors.brandPrimaryContainer : Colors.transparent,
         borderRadius: BorderRadius.circular(6),
         child: InkWell(
           onTap: onTap,
@@ -877,8 +943,8 @@ class _TopBarIconButton extends StatelessWidget {
                       color: isActive
                           ? AppColors.brandPrimaryAlt
                           : (isDark
-                              ? AppColors.darkTextSecondary
-                              : AppColors.lightTextSecondary),
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextSecondary),
                     ),
             ),
           ),

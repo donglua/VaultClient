@@ -63,7 +63,9 @@ class FileTreeNotifier extends Notifier<List<FileSystemEntity>> {
     final topLevel = <String, FileSystemEntity>{};
 
     for (final entry in entries) {
-      final normalized = FileTreeNotifier.normalizeRelativePath(entry.relativePath);
+      final normalized = FileTreeNotifier.normalizeRelativePath(
+        entry.relativePath,
+      );
       if (normalized.isEmpty) {
         continue;
       }

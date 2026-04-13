@@ -57,9 +57,18 @@ class ObsidianLinkBuilder extends MarkdownElementBuilder {
         future: imageFile.exists(),
         builder: (context, snapshot) {
           if (snapshot.hasData && snapshot.data == true) {
-            return Image.file(imageFile, errorBuilder: (context, error, stackTrace) => Text('Error loading image: $href', style: TextStyle(color: Colors.red)));
+            return Image.file(
+              imageFile,
+              errorBuilder: (context, error, stackTrace) => Text(
+                'Error loading image: $href',
+                style: TextStyle(color: Colors.red),
+              ),
+            );
           }
-          return Text('Image not found: $href', style: TextStyle(color: Colors.red));
+          return Text(
+            'Image not found: $href',
+            style: TextStyle(color: Colors.red),
+          );
         },
       );
     } else {
@@ -71,11 +80,13 @@ class ObsidianLinkBuilder extends MarkdownElementBuilder {
       return GestureDetector(
         onTap: () async {
           if (await targetFile.exists()) {
-             // 通过 Riverpod 更新选中文件
-             ref.read(selectedFileProvider.notifier).selectFile(targetFile);
+            // 通过 Riverpod 更新选中文件
+            ref.read(selectedFileProvider.notifier).selectFile(targetFile);
           } else {
             if (context.mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('File not found: $targetPath')));
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('File not found: $targetPath')),
+              );
             }
           }
         },

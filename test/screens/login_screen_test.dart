@@ -71,7 +71,9 @@ void main() {
       await tester.binding.setSurfaceSize(const Size(800, 800));
       await _pumpLoginScreen(tester);
 
-      final textFields = tester.widgetList<TextField>(find.byType(TextField)).toList();
+      final textFields = tester
+          .widgetList<TextField>(find.byType(TextField))
+          .toList();
       expect(textFields.length, 3);
 
       // 验证默认值
@@ -98,7 +100,9 @@ void main() {
       expect(find.text('PASSWORD'), findsOneWidget);
 
       // 验证密码是隐藏的
-      final textFields = tester.widgetList<TextField>(find.byType(TextField)).toList();
+      final textFields = tester
+          .widgetList<TextField>(find.byType(TextField))
+          .toList();
       expect(textFields[2].obscureText, isTrue);
       await tester.binding.setSurfaceSize(null);
     });
