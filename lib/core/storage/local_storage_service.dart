@@ -19,9 +19,22 @@ class LocalStorageService {
     return vaultDir;
   }
 
-  Future<File> getFile(String relativePath) async {
+  Future<String> _getValidatedPath(String relativePath) async {
     final vaultDir = await getVaultDirectory();
-    return File(p.join(vaultDir.path, relativePath));
+    final vaultPath = p.canonicalize(vaultDir.path);
+    final targetPath = p.canonicalize(p.join(vaultPath, relativePath));
+
+    if (targetPath == vaultPath ||
+        p.isWithin(vaultPath, targetPath)) {
+      return targetPath;
+    }
+
+    throw ArgumentError('Invalid path: $relativePath');
+  }
+
+  Future<File> getFile(String relativePath) async {
+    final validatedPath = await _getValidatedPath(relativePath);
+    return File(validatedPath);
   }
 
   Future<void> writeFile(String relativePath, String content) async {
@@ -52,8 +65,8 @@ class LocalStorageService {
   }
 
   Future<List<FileSystemEntity>> listFiles(String relativePath) async {
-    final vaultDir = await getVaultDirectory();
-    final targetDir = Directory(p.join(vaultDir.path, relativePath));
+    final validatedPath = await _getValidatedPath(relativePath);
+    final targetDir = Directory(validatedPath);
     if (await targetDir.exists()) {
       return await targetDir.list(recursive: false).toList();
     }
