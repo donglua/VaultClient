@@ -279,5 +279,31 @@ void main() {
       // 若冲突场景被错误标记为“已同步”，第二次将被跳过。
       expect(webdav.downloaded, contains('/notes/a.md'));
     });
+
+    test(
+      'skips malicious remote file names containing traversal characters',
+      () async {
+        // Upsert a file with a malicious name
+        webdav.upsertFile(
+          '/notes/../malicious.md',
+          'bad content',
+          DateTime.utc(2026, 3, 20, 8),
+        );
+        webdav.upsertFile(
+          '/notes/normal.md',
+          'good content',
+          DateTime.utc(2026, 3, 20, 8),
+        );
+
+        final result = await engine.syncVault('/');
+
+        // The malicious file should be skipped, so downloaded is normal.md
+        expect(webdav.downloaded, contains('/notes/normal.md'));
+        expect(webdav.downloaded, isNot(contains('/notes/../malicious.md')));
+
+        // Because the malicious file was skipped, failedCount should be incremented.
+        expect(result.failedCount, greaterThanOrEqualTo(1));
+      },
+    );
   });
 }

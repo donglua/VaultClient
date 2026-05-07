@@ -100,6 +100,17 @@ class SyncEngine {
 
         stats.scannedCount++;
 
+        // 基础防御：拒绝包含非法或恶意路径字符的文件名
+        if (file.name!.contains('..') ||
+            file.name!.contains('/') ||
+            file.name!.contains('\\')) {
+          stats.failedCount++;
+          if (kDebugMode) {
+            debugPrint('Skipped malicious remote file name: ${file.name}');
+          }
+          continue;
+        }
+
         final localItemRelPath = relativePath.isEmpty
             ? file.name!
             : p.posix.join(relativePath, file.name!);
@@ -107,6 +118,20 @@ class SyncEngine {
           localVaultPath,
           ...p.posix.split(localItemRelPath),
         ]);
+
+        // 深度防御：规范化路径验证，防止一切路径穿越攻击
+        final canonicalVault = p.canonicalize(localVaultPath);
+        final canonicalTarget = p.canonicalize(localItemFullPath);
+        if (canonicalTarget != canonicalVault &&
+            !p.isWithin(canonicalVault, canonicalTarget)) {
+          stats.failedCount++;
+          if (kDebugMode) {
+            debugPrint(
+              'Path traversal attempt detected and blocked: $localItemFullPath',
+            );
+          }
+          continue;
+        }
 
         if (file.isDir == true) {
           final localDir = Directory(localItemFullPath);
