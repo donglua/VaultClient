@@ -45,7 +45,7 @@ class FileTreeNotifier extends Notifier<List<FileSystemEntity>> {
       state = _sortEntities(files);
     } catch (e) {
       if (kDebugMode) {
-        debugPrint('[FileTreeNotifier] Failed to refresh: $e');
+        debugPrint('[FileTreeNotifier] Failed to refresh: ${e.runtimeType}');
       }
       state = [];
     }
