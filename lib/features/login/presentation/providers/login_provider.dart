@@ -56,7 +56,7 @@ class WebDAVLoginNotifier extends Notifier<WebDAVLoginState> {
           await syncEngine.syncVault('');
         } catch (syncError) {
           if (kDebugMode) {
-            debugPrint('[LoginProvider] Initial sync failed: $syncError');
+            debugPrint('[LoginProvider] Initial sync failed: ${syncError.runtimeType}');
           }
           // 同步失败不影响登录，用户可以稍后手动同步
         }

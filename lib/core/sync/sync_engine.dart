@@ -180,7 +180,7 @@ class SyncEngine {
     } catch (e) {
       stats.failedCount++;
       if (kDebugMode) {
-        debugPrint('Pull remote failed for $relativePath: $e');
+        debugPrint('Pull remote failed for $relativePath: ${e.runtimeType}');
       }
     }
   }
