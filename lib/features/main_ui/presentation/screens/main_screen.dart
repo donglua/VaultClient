@@ -769,10 +769,11 @@ class _FileTreeWidgetState extends ConsumerState<_FileTreeWidget> {
         final entity = files[index];
         final name = p.basename(entity.path);
 
-        if (entity is Directory) {
-          return _buildFolderItem(entity, name, 0, isDark);
-        }
-        return _buildFileItem(entity as File, name, 0, isDark);
+        return switch (entity) {
+          Directory() => _buildFolderItem(entity, name, 0, isDark),
+          File() => _buildFileItem(entity, name, 0, isDark),
+          _ => const SizedBox.shrink(),
+        };
       },
     );
   }
@@ -870,8 +871,8 @@ class _FileTreeWidgetState extends ConsumerState<_FileTreeWidget> {
         final name = p.basename(entity.path);
         if (entity is Directory) {
           widgets.add(_buildFolderItem(entity, name, depth, isDark));
-        } else if (name.endsWith('.md')) {
-          widgets.add(_buildFileItem(entity as File, name, depth, isDark));
+        } else if (entity is File && name.endsWith('.md')) {
+          widgets.add(_buildFileItem(entity, name, depth, isDark));
         }
       }
     } catch (e) {
@@ -941,7 +942,7 @@ class _TreeItemTile extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              ?trailing,
+              if (trailing != null) trailing,
             ],
           ),
         ),
