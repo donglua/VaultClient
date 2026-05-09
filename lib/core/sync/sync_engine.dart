@@ -135,11 +135,11 @@ class SyncEngine {
 
         if (file.isDir == true) {
           final localDir = Directory(localItemFullPath);
-          if (!await localDir.exists()) {
+          var localDirStat = await localDir.stat();
+          if (localDirStat.type == FileSystemEntityType.notFound) {
             await localDir.create(recursive: true);
+            localDirStat = await localDir.stat();
           }
-
-          final localDirStat = await localDir.stat();
           indexMap[localItemRelPath] = SyncEntry(
             relativePath: localItemRelPath,
             isDir: true,
@@ -189,15 +189,16 @@ class SyncEngine {
           continue;
         }
 
-        final localStat = await localFile.exists()
-            ? await localFile.stat()
-            : null;
+        final localStat = await localFile.stat();
+        final hasLocal = localStat.type != FileSystemEntityType.notFound;
+
         indexMap[localItemRelPath] = SyncEntry(
           relativePath: localItemRelPath,
           isDir: false,
           size: file.size ?? 0,
           remoteMTimeMillis: file.mTime?.millisecondsSinceEpoch,
-          localMTimeMillis: localStat?.modified.millisecondsSinceEpoch,
+          localMTimeMillis:
+              hasLocal ? localStat.modified.millisecondsSinceEpoch : null,
           etag: null,
           lastSyncedAtMillis: DateTime.now().millisecondsSinceEpoch,
         );
@@ -224,7 +225,8 @@ class SyncEngine {
     final localDir = Directory(
       p.joinAll([localVaultPath, ...p.posix.split(relativePath)]),
     );
-    if (!await localDir.exists()) {
+    final stat = await localDir.stat();
+    if (stat.type == FileSystemEntityType.notFound) {
       return;
     }
 
@@ -297,8 +299,8 @@ class SyncEngine {
     File localFile,
     SyncEntry? oldEntry,
   ) async {
-    final exists = await localFile.exists();
-    if (!exists) {
+    final stat = await localFile.stat();
+    if (stat.type == FileSystemEntityType.notFound) {
       return const _PullDecision(
         shouldDownload: true,
         isConflictDownload: false,
@@ -312,7 +314,6 @@ class SyncEngine {
       );
     }
 
-    final stat = await localFile.stat();
     if (remoteFile.mTime == null) {
       final shouldDownload = remoteFile.size != stat.size;
       return _PullDecision(
