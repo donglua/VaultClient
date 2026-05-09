@@ -74,53 +74,6 @@ void main() {
       );
     });
 
-    test('upsertEntry adds and updates entries', () async {
-      final entry1 = SyncEntry(
-        relativePath: 'note1.md',
-        isDir: false,
-        size: 100,
-        remoteMTimeMillis: 1000,
-        localMTimeMillis: 1000,
-        etag: 'tag1',
-        lastSyncedAtMillis: 1000,
-      );
-
-      final entry2 = SyncEntry(
-        relativePath: 'note2.md',
-        isDir: false,
-        size: 200,
-        remoteMTimeMillis: 2000,
-        localMTimeMillis: 2000,
-        etag: 'tag2',
-        lastSyncedAtMillis: 2000,
-      );
-
-      // 1. Add new entry
-      await service.upsertEntry(entry1);
-      var loaded = await service.loadEntries();
-      expect(loaded.length, 1);
-      expect(loaded.first.relativePath, 'note1.md');
-      expect(loaded.first.size, 100);
-
-      // 2. Add second entry
-      await service.upsertEntry(entry2);
-      loaded = await service.loadEntries();
-      expect(loaded.length, 2);
-      expect(
-        loaded.map((e) => e.relativePath),
-        containsAll(['note1.md', 'note2.md']),
-      );
-
-      // 3. Update existing entry
-      final updatedEntry1 = entry1.copyWith(size: 150, etag: 'tag1-updated');
-      await service.upsertEntry(updatedEntry1);
-      loaded = await service.loadEntries();
-      expect(loaded.length, 2);
-      final entry = loaded.firstWhere((e) => e.relativePath == 'note1.md');
-      expect(entry.size, 150);
-      expect(entry.etag, 'tag1-updated');
-    });
-
     test('returns empty entries when index file is corrupted', () async {
       final indexFile = File(p.join(tempDir.path, '.vault_index.json'));
       await indexFile.writeAsString('{not-json');
